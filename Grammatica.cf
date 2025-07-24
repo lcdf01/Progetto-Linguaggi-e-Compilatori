@@ -15,7 +15,7 @@ comment "/*" "*/" ;
 
 entrypoints Program, Stmt, RExpr, LExpr ;
 
-rules Boolean ::= "True" | "False" ;
+rules Boolean ::= "true" | "false" ; -- Il professore ha specificato true e false, case sensitive
 
 coercions   RExpr 14 ;
 
@@ -83,7 +83,7 @@ DvarCInit.   Decl ::= TypeSpec  [VarDeclInit] ";" ;
 separator nonempty VarDeclInit "," ;
 
 BasTyp.     TypeSpec ::= BasicType ;
-rules BasicType ::= "bool" | "char" | "float" | "int" | "void" ;
+rules BasicType ::= "bool" | "char" | "float" | "int" ; -- Il tipo void non è specificato
 
 CompType.   TypeSpec ::= CompoundType ;
 ArrDef.     CompoundType ::= TypeSpec "[" Integer "]" ;
@@ -100,9 +100,7 @@ Dfun.       Decl ::= BasicType Ident "(" [Parameter] ")" CompStmt ;
 
 separator   Parameter "," ;
 
-Param.      Parameter ::= Modality TypeSpec Ident ;
-rules       Modality ::= {-empty-} | "val" | "ref" | "const" | "res" | "valres" | "name" ;
-
+Param.      Parameter ::=  TypeSpec Ident ; -- Questa modifica perchè il professore ha richiesto passaggio per valore
 
 
 
@@ -138,10 +136,20 @@ RetExpVoid.     JumpStmt ::= "return" ;
 RetExp.     JumpStmt ::= "return" "(" RExpr ")" ;
 
 
-IfNoElse.   SelectionStmt ::= "if" "(" RExpr ")" Stmt ;
+IfNoElse.   SelectionStmt ::= "if" "(" RExpr ")" Stmt ; -- Giustificare la scelta della sintassi, Go non ha le parentesi
 IfElse.     SelectionStmt ::= "if" "(" RExpr ")" Stmt "else" Stmt ;
 
 
 While.        IterStmt ::= "while" "(" RExpr ")" Stmt ;
-DoWhile.      IterStmt ::= "do" Stmt "while" "(" RExpr ")" ";" ;
+DoWhile.      IterStmt ::= "do" Stmt "while" "(" RExpr ")" ";" ; -- do While non specificato, inoltre come controllo di flusso Go non ammette il while ma gestisce tutto con il for, decidere!
+
+-- Built-in functions (predefined identifiers) -- Motivare la scelta, non è necessario definirli come token, facendo così l'utente non può ridefinire 
+token WriteInt    {"writeInt"} ;
+token WriteFloat  {"writeFloat"} ;
+token WriteChar   {"writeChar"} ;
+token WriteString {"writeString"} ;
+token ReadInt     {"readInt"} ;
+token ReadFloat   {"readFloat"} ;
+token ReadChar    {"readChar"} ;
+token ReadString  {"readString"} ;
 
