@@ -123,3 +123,185 @@ Causa:
 Presenza di più regole per Assignment_op.
 Soluzione:
 Conflitto tipico, accettato nei parser LR generati; in linguaggi reali si risolve con precedenze o con specifiche più restrittive.
+
+
+Conflitto 11 — Ambiguità tra assegnamento e incremento
+Descrizione:
+Dopo un LExpr, il parser deve decidere se ridurre subito come statement di incremento/decremento (LExpr "++" ;) oppure aspettare un operatore di assegnamento (LExpr "+=" ... ;).
+Esempio:
+
+c
+Copia
+Modifica
+x++;
+x += 1;
+Causa:
+Le regole per incremento/decremento postfisso e assegnamento composto sono entrambe possibili.
+Soluzione:
+Conflitto tipico, accettabile in progetti didattici.
+
+Conflitto 12 — Ambiguità tra chiamata a funzione e accesso array
+Descrizione:
+Dopo un identificatore seguito da ( o [, il parser deve scegliere tra chiamata a funzione e accesso array.
+Esempio:
+
+c
+Copia
+Modifica
+foo(3);
+foo[2];
+Causa:
+Regole parallele per FunCall e BLExpr con accesso array.
+Soluzione:
+Happy preferisce shift, nessun impatto su parsing reale.
+
+Conflitto 13 — Ambiguità tra statement composto e singolo
+Descrizione:
+Un blocco { ... } può essere sia uno statement singolo sia parte di una struttura di controllo (if/while/do).
+Causa:
+Sovrapposizione tra regole per statement composto e statement di controllo.
+Soluzione:
+Conflitto gestibile, tipico nelle grammatiche con blocchi opzionali.
+
+Conflitto 14 — Parametri funzione opzionali
+Descrizione:
+Ambiguità nella distinzione tra chiamata di funzione senza parametri e chiamata con lista vuota o con un solo parametro.
+Esempio:
+
+c
+Copia
+Modifica
+foo();
+foo(x);
+Causa:
+Macro separator per parametri e regole con lista vuota.
+Soluzione:
+Conflitto strutturale, non crea problemi sul parsing effettivo.
+
+Conflitto 15 — Selezione tra dereferenziazione e pre-incremento
+Descrizione:
+Dopo il simbolo "*", il parser può interpretare la dereferenziazione (*x) oppure proseguire con un incremento (*++x).
+Causa:
+Sovrapposizione tra regole di LExpr per dereferenziazione e incremento/decremento.
+Soluzione:
+Conflitto tollerabile, può essere risolto con restrizioni sintattiche più forti.
+
+Conflitto 16 — Ambiguità tra assegnamento e statement semplice su array
+Descrizione:
+Dopo un accesso array come arr[0], il parser può ridurre subito oppure attendere un operatore di assegnamento.
+Esempio:
+
+c
+Copia
+Modifica
+arr[0];
+arr[0] = 3;
+Causa:
+Regole concorrenti per statement su array.
+Soluzione:
+Tipico di parser LR, conflitto accettato.
+
+Conflitto 17 — Ambiguità tra do-while e while
+Descrizione:
+Un blocco seguito da "while" può essere interpretato sia come corpo di un do-while sia come inizio di un ciclo while.
+Esempio:
+
+c
+Copia
+Modifica
+do { ... } while (cond);
+while (cond) { ... }
+Causa:
+Sovrapposizione tra regole per do-while e while.
+Soluzione:
+Happy preferisce shift, conflitto documentabile come atteso.
+
+Conflitto 18 — Parametri multipli nelle funzioni
+Descrizione:
+Ambiguità nella separazione dei parametri nelle dichiarazioni o chiamate di funzione.
+Esempio:
+
+c
+Copia
+Modifica
+foo(a, b);
+Causa:
+Macro separator e regole multiple per [Parameter].
+Soluzione:
+Conflitto strutturale, non influenza parsing reale.
+
+Conflitto 19 — Ambiguità tra return void e return valore
+Descrizione:
+Il parser può scegliere tra un return senza espressione (return;) o un return con valore (return (x);).
+Esempio:
+
+c
+Copia
+Modifica
+return;
+return (y);
+Causa:
+Regole per JumpStmt concorrenti.
+Soluzione:
+Conflitto accettato, gestito dal parser.
+
+Conflitto 20 — Ambiguità tra uso di variabile e statement void
+Descrizione:
+Un identificatore può essere interpretato sia come uso di variabile sia come statement void.
+Esempio:
+
+c
+Copia
+Modifica
+x;
+foo();
+Causa:
+Regole per LExpr e FunCall in concorrenza.
+Soluzione:
+Conflitto tipico, accettato in parser LR.
+
+Conflitto 21 — Ambiguità tra variabile e assegnamento a variabile
+Descrizione:
+Dopo aver riconosciuto un identificatore, il parser può ridurre subito a statement o attendere per un eventuale assegnamento.
+Esempio:
+
+c
+Copia
+Modifica
+y;
+y = 1;
+Causa:
+Regole parallele per statement e assegnamento.
+Soluzione:
+Conflitto strutturale, documentabile come accettato.
+
+Conflitto 22 — Lista di dichiarazioni vs dichiarazione singola
+Descrizione:
+Ambiguità tra lista vuota, lista con un solo elemento o lista con più elementi nelle dichiarazioni.
+Causa:
+Macro separator sulle dichiarazioni.
+Soluzione:
+Conflitto di implementazione, non influenza la correttezza del parser.
+
+Conflitto 23 — Ambiguità tra chiamata a funzione e dereferenziazione
+Descrizione:
+Un identificatore seguito da ( o * può essere interpretato come chiamata a funzione o come dereferenziazione di un puntatore a funzione.
+Esempio:
+
+c
+Copia
+Modifica
+(*foo)();
+foo();
+Causa:
+Regole per FunCall e dereferenziazione concorrenti.
+Soluzione:
+Conflitto tollerato, risolto tramite shift.
+
+Conflitto 24 — Ambiguità tra statement, assegnamento e statement composto
+Descrizione:
+Dopo una variabile o un’espressione, il parser può interpretare come statement semplice, assegnamento o come inizio di uno statement composto/blocco.
+Causa:
+Sovrapposizione di regole tra LExpr, statement e blocchi.
+Soluzione:
+Tipico delle grammatiche per linguaggi imperativi, conflitto accettabile.
