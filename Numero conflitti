@@ -1,0 +1,125 @@
+Conflitto 1 — Statement: LExpr semplice vs. assegnamento
+Descrizione:
+Dopo aver riconosciuto un LExpr, il parser si trova di fronte all'ambiguità tra chiudere lo statement (LExpr ;) oppure continuare con un'operazione di assegnamento (LExpr Assignment_op RExpr ;).
+Esempio:
+
+c
+Copia
+Modifica
+x;
+x = 5;
+Causa:
+La presenza delle due regole:
+
+go
+Copia
+Modifica
+Stmt ::= LExpr ';'
+Stmt ::= LExpr Assignment_op RExpr ';'
+Soluzione:
+Questo conflitto è strutturale nei linguaggi C-like. Happy, di default, preferisce shift (attendere altri token). In un progetto didattico questo conflitto può essere considerato accettabile.
+
+Conflitto 2 — FunCall vs. LExpr semplice
+Descrizione:
+Quando il parser riconosce un identificatore, può sia considerarlo come una chiamata a funzione (se seguito da parentesi), sia come una semplice espressione (LExpr).
+Esempio:
+
+c
+Copia
+Modifica
+foo();
+bar++;
+Causa:
+Ambiguità tra regole per chiamate a funzione e statement semplici.
+Soluzione:
+Conflitto accettabile, Happy preferisce shift.
+
+Conflitto 3 — Incremento/decremento pre/post
+Descrizione:
+Le regole di pre-incremento/decremento (++x) e post-incremento/decremento (x++) possono sovrapporsi quando scritte insieme (++x++).
+Causa:
+Ambiguità tra i livelli di LExpr definiti tramite coercions e regole multiple per incremento/decremento.
+Soluzione:
+In molti linguaggi costrutti come ++x++ sono vietati; si può raffinare la grammatica per limitarli. Nel progetto attuale il conflitto è tollerabile.
+
+Conflitto 4 — Accesso array vs. identificatore semplice
+Descrizione:
+Il parser deve decidere se un identificatore seguito da [ debba essere ridotto subito oppure debba attendere ulteriori elementi per un accesso a array.
+Esempio:
+
+c
+Copia
+Modifica
+a[3];
+b;
+Causa:
+Regole concorrenti tra BLExpr ::= Ident e BLExpr ::= BLExpr '[' RExpr ']'.
+Soluzione:
+Conflitto tipico nei parser LR, risolto tramite shift.
+
+Conflitto 5 — If senza else (dangling else)
+Descrizione:
+Il classico problema dell'else pendente: il parser deve scegliere a quale if associare l'else in presenza di if annidati senza else.
+Esempio:
+
+c
+Copia
+Modifica
+if (a) if (b) x; else y;
+Causa:
+La regola SelectionStmt ::= "if" "(" RExpr ")" Stmt "else" Stmt può entrare in conflitto con la versione senza else.
+Soluzione:
+Happy associa sempre l’else all’if più vicino; conflitto accettabile.
+
+Conflitto 6 — Coercions tra livelli di espressione
+Descrizione:
+La presenza di numerosi livelli di espressione (RExprN) generati dalla macro coercions crea conflitti su quando ridurre fra i livelli.
+Causa:
+Una stessa espressione può essere ridotta a più livelli, generando ambiguità shift/reduce.
+Soluzione:
+Stratificare bene gli operatori nelle regole; il conflitto può essere tollerato nel progetto.
+
+Conflitto 7 — Array di puntatori e dereferenziazione
+Descrizione:
+Ambiguità tra accesso array, puntatore e dereferenziazione.
+Esempio:
+
+c
+Copia
+Modifica
+*p[2];
+Causa:
+Regole concorrenti fra dereferenziazione (*) e accesso array ([...]).
+Soluzione:
+Risolto tramite stratificazione dei livelli di LExpr e RExpr; conflitto tipico in parser LR.
+
+Conflitto 8 — Statement di chiamata a funzione vs. statement espressione
+Descrizione:
+Quando un statement può essere sia una chiamata a funzione che un’espressione generica (LExpr), il parser può trovarsi in conflitto.
+Causa:
+Regole per Stmt ::= FunCall ';' e Stmt ::= LExpr ';' in sovrapposizione.
+Soluzione:
+Conflitto gestibile e documentabile come atteso.
+
+Conflitto 9 — Parametri di funzione variabili
+Descrizione:
+Ambiguità tra lista vuota di parametri e una lista con un solo elemento, specialmente con separatori opzionali.
+Causa:
+Macro separator su [Parameter] che genera regole ridondanti.
+Soluzione:
+Non influenza il parsing di esempi reali, conflitto di implementazione tollerato.
+
+Conflitto 10 — Assegnamenti composti
+Descrizione:
+Ambiguità tra assegnamento semplice (=) e assegnamento composto (+=, -= etc.) dopo un LExpr.
+Esempio:
+
+c
+Copia
+Modifica
+x = 1;
+x += 2;
+Causa:
+Presenza di più regole per Assignment_op.
+Soluzione:
+Conflitto tipico, accettato nei parser LR generati; in linguaggi reali si risolve con precedenze o con specifiche più restrittive.
