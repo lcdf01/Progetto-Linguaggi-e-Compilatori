@@ -1,0 +1,32 @@
+func cristo(var x int) {
+  var d = [3]string{"hello", "ciao", "bonsoir"};
+  d[0] = "Hello";
+}
+
+func main() {
+  var x int;
+  var x int = 4;
+
+  var r string = "Ciao";
+  //var z, w int = 1, 2;
+  var b = [3]int{1, 2, 3};
+
+  var g float = 3.14;
+
+  var pointer *int;
+  
+  var p *int = &g;
+	*p = *p / 2;
+  
+  x++;
+  cristo(x);
+
+  var y int = 50;
+
+  writeInt(y);
+  if (y > 100 || y == 120) {
+    writeString("valore grande");
+  } else {
+    writeString("valore piccolo");
+  }
+}
