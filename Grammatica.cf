@@ -1,12 +1,5 @@
--- BNFC sources for a simple Imperative Language (Conflict-Free)
--- 
--- Grammatica ottimizzata per eliminare i conflitti shift/reduce e reduce/reduce
---
--- Principali correzioni:
--- 1. Eliminati gap nelle precedenze
--- 2. Ristrutturate le VarSpec per evitare ambiguità
--- 3. Semplificate le regole CompStmt
--- 4. Corrette le precedenze LExpr
+-- BNFC sources for a simple Imperative Language
+
 
 comment "//" ;
 comment "/*" "*/" ;
@@ -15,7 +8,7 @@ entrypoints Program, Stmt, RExpr, LExpr ;
 
 rules Boolean ::= "true" | "false" ;
 
--- Precedenze degli operatori (catena continua senza gap)
+-- Precedenze degli operatori
 coercions   RExpr 12 ;
 
 -- Operatori logici
@@ -82,7 +75,7 @@ PostInc.    LExpr2 ::= LExpr3 "++" ;
 PostDecr.   LExpr2 ::= LExpr3 "--" ;
 BasLExpr.   LExpr2 ::= BLExpr ;
 
--- Array indexing e identificatori (non ricorsivi per evitare conflitti)
+-- Array indexing e identificatori
 ArrayEl.    BLExpr ::= Ident "[" RExpr "]" ;
 Id.         BLExpr ::= Ident ;
 
@@ -98,8 +91,7 @@ DvarGo.     Decl ::= "var" VarSpec ";" ;
 separator   Parameter "," ;
 Param.      Parameter ::= "var" Ident TypeSpec ;
 
--- VarSpec ristrutturate per evitare conflitti
--- Separare chiaramente i casi con inizializzazione da quelli senza
+-- VarSpec
 -- VarSpecMultiInit.   VarSpec ::= MyIdentList TypeSpec "=" MyRExprList ;     -- var x, y int = 1, 2
 -- VarSpecMultiNoInit. VarSpec ::= MyIdentList TypeSpec ;                   -- var x, y int
 VarSpecSingleInit.  VarSpec ::= Ident TypeSpec "=" RExpr ;             -- var x int = 1  

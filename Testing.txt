@@ -17,7 +17,7 @@ func main() {
   
   var p *int = &g;
 	*p = *p / 2;
-  
+
   x++;
   cristo(x);
 
@@ -26,6 +26,10 @@ func main() {
   writeInt(y);
   if (y > 100 || y == 120) {
     writeString("valore grande");
+    
+    if (y > 100) {
+      writeString("Letsgoski");
+    }
   } else {
     writeString("valore piccolo");
   }
