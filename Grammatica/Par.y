@@ -17,151 +17,187 @@ module Grammatica.Par
 import Prelude
 
 import qualified Grammatica.Abs
-import Grammatica.Lex
+import Grammatica.Lex (Posn(..), tokenPositions)
+import qualified Data.ByteString.Char8 as BS
 
-}
+-- Wrapper per includere le posizioni
+data Located a = Located !Posn !a
 
+instance Functor Located where
+  fmap f (Located p x) = Located p (f x)
+
+-- Tipi per i token con posizione
+type Token = (Grammatica.Lex.Token, Posn)
+type Err = Either String
+
+-- Funzioni per estrarre posizioni
+tokenPos :: [Token] -> String
+tokenPos ((_, (posn, _, _)):_) = show posn
+tokenPos [] = "end of file"
+
+getPos :: Token -> Posn
+getPos (_, pos) = pos
+
+-- Modifiche alle regole per includere le posizioni
 %name pProgram Program
 %name pStmt Stmt
 %name pRExpr RExpr
 %name pLExpr LExpr
--- no lexer declaration
+
 %monad { Err } { (>>=) } { return }
 %tokentype {Token}
+
 %token
-  '!'        { PT _ (TS _ 1)  }
-  '!='       { PT _ (TS _ 2)  }
-  '%'        { PT _ (TS _ 3)  }
-  '&'        { PT _ (TS _ 4)  }
-  '&&'       { PT _ (TS _ 5)  }
-  '&='       { PT _ (TS _ 6)  }
-  '('        { PT _ (TS _ 7)  }
-  ')'        { PT _ (TS _ 8)  }
-  '*'        { PT _ (TS _ 9)  }
-  '*='       { PT _ (TS _ 10) }
-  '+'        { PT _ (TS _ 11) }
-  '++'       { PT _ (TS _ 12) }
-  '+='       { PT _ (TS _ 13) }
-  ','        { PT _ (TS _ 14) }
-  '-'        { PT _ (TS _ 15) }
-  '--'       { PT _ (TS _ 16) }
-  '-='       { PT _ (TS _ 17) }
-  '/'        { PT _ (TS _ 18) }
-  '/='       { PT _ (TS _ 19) }
-  ';'        { PT _ (TS _ 20) }
-  '<'        { PT _ (TS _ 21) }
-  '<='       { PT _ (TS _ 22) }
-  '='        { PT _ (TS _ 23) }
-  '=='       { PT _ (TS _ 24) }
-  '>'        { PT _ (TS _ 25) }
-  '>='       { PT _ (TS _ 26) }
-  '['        { PT _ (TS _ 27) }
-  ']'        { PT _ (TS _ 28) }
-  '^'        { PT _ (TS _ 29) }
-  '^='       { PT _ (TS _ 30) }
-  'bool'     { PT _ (TS _ 31) }
-  'break'    { PT _ (TS _ 32) }
-  'char'     { PT _ (TS _ 33) }
-  'continue' { PT _ (TS _ 34) }
-  'do'       { PT _ (TS _ 35) }
-  'else'     { PT _ (TS _ 36) }
-  'false'    { PT _ (TS _ 37) }
-  'float'    { PT _ (TS _ 38) }
-  'func'     { PT _ (TS _ 39) }
-  'if'       { PT _ (TS _ 40) }
-  'int'      { PT _ (TS _ 41) }
-  'string'   { PT _ (TS _ 42) }
-  'true'     { PT _ (TS _ 43) }
-  'var'      { PT _ (TS _ 44) }
-  'while'    { PT _ (TS _ 45) }
-  '{'        { PT _ (TS _ 46) }
-  '|='       { PT _ (TS _ 47) }
-  '||'       { PT _ (TS _ 48) }
-  '}'        { PT _ (TS _ 49) }
-  L_Ident    { PT _ (TV $$)   }
-  L_charac   { PT _ (TC $$)   }
-  L_doubl    { PT _ (TD $$)   }
-  L_integ    { PT _ (TI $$)   }
-  L_quoted   { PT _ (TL $$)   }
+  '!'        { (PT _ (TS _ 1), pos) }
+  '!='       { (PT _ (TS _ 2), pos) }
+  '%'        { (PT _ (TS _ 3), pos) }
+  '&'        { (PT _ (TS _ 4), pos) }
+  '&&'       { (PT _ (TS _ 5), pos) }
+  '&='       { (PT _ (TS _ 6), pos) }
+  '('        { (PT _ (TS _ 7), pos) }
+  ')'        { (PT _ (TS _ 8), pos) }
+  '*'        { (PT _ (TS _ 9), pos) }
+  '*='       { (PT _ (TS _ 10), pos) }
+  '+'        { (PT _ (TS _ 11), pos) }
+  '++'       { (PT _ (TS _ 12), pos) }
+  '+='       { (PT _ (TS _ 13), pos) }
+  ','        { (PT _ (TS _ 14), pos) }
+  '-'        { (PT _ (TS _ 15), pos) }
+  '--'       { (PT _ (TS _ 16), pos) }
+  '-='       { (PT _ (TS _ 17), pos) }
+  '/'        { (PT _ (TS _ 18), pos) }
+  '/='       { (PT _ (TS _ 19), pos) }
+  ';'        { (PT _ (TS _ 20), pos) }
+  '<'        { (PT _ (TS _ 21), pos) }
+  '<='       { (PT _ (TS _ 22), pos) }
+  '='        { (PT _ (TS _ 23), pos) }
+  '=='       { (PT _ (TS _ 24), pos) }
+  '>'        { (PT _ (TS _ 25), pos) }
+  '>='       { (PT _ (TS _ 26), pos) }
+  '['        { (PT _ (TS _ 27), pos) }
+  ']'        { (PT _ (TS _ 28), pos) }
+  '^'        { (PT _ (TS _ 29), pos) }
+  '^='       { (PT _ (TS _ 30), pos) }
+  'bool'     { (PT _ (TS _ 31), pos) }
+  'break'    { (PT _ (TS _ 32), pos) }
+  'char'     { (PT _ (TS _ 33), pos) }
+  'continue' { (PT _ (TS _ 34), pos) }
+  'do'       { (PT _ (TS _ 35), pos) }
+  'else'     { (PT _ (TS _ 36), pos) }
+  'false'    { (PT _ (TS _ 37), pos) }
+  'float'    { (PT _ (TS _ 38), pos) }
+  'func'     { (PT _ (TS _ 39), pos) }
+  'if'       { (PT _ (TS _ 40), pos) }
+  'int'      { (PT _ (TS _ 41), pos) }
+  'string'   { (PT _ (TS _ 42), pos) }
+  'true'     { (PT _ (TS _ 43), pos) }
+  'var'      { (PT _ (TS _ 44), pos) }
+  'while'    { (PT _ (TS _ 45), pos) }
+  '{'        { (PT _ (TS _ 46), pos) }
+  '|='       { (PT _ (TS _ 47), pos) }
+  '||'       { (PT _ (TS _ 48), pos) }
+  '}'        { (PT _ (TS _ 49), pos) }
+  L_Ident    { (PT _ (TV $$), pos) }
+  L_charac   { (PT _ (TC $$), pos) }
+  L_doubl    { (PT _ (TD $$), pos) }
+  L_integ    { (PT _ (TI $$), pos) }
+  L_quoted   { (PT _ (TL $$), pos) }
 
 %%
 
+-- Funzioni helper per costruire nodi con posizione
+mkLocated :: (a -> b) -> Token -> a -> b
+mkLocated constr tok x = constr (Located (getPos tok) x)
+
+mkBinOp :: (a -> a -> b) -> Token -> a -> a -> b
+mkBinOp op tok x y = op (Located (getPos tok) x) (Located (getPos tok) y)
+
+-- Regole grammaticali con posizioni
 Ident :: { Grammatica.Abs.Ident }
-Ident  : L_Ident { Grammatica.Abs.Ident $1 }
+Ident : L_Ident { mkLocated Grammatica.Abs.Ident $1 $2 }
 
-Char    :: { Char }
-Char     : L_charac { (read $1) :: Char }
+Char :: { Char }
+Char : L_charac { (read $2) :: Char }
 
-Double  :: { Double }
-Double   : L_doubl  { (read $1) :: Double }
+Double :: { Double }
+Double : L_doubl { (read $2) :: Double }
 
 Integer :: { Integer }
-Integer  : L_integ  { (read $1) :: Integer }
+Integer : L_integ { (read $2) :: Integer }
 
-String  :: { String }
-String   : L_quoted { $1 }
+String :: { String }
+String : L_quoted { $2 }
 
 Boolean :: { Grammatica.Abs.Boolean }
 Boolean
-  : 'true' { Grammatica.Abs.Boolean_true }
-  | 'false' { Grammatica.Abs.Boolean_false }
+  : 'true' { mkLocated (const Grammatica.Abs.Boolean_true) $1 () }
+  | 'false' { mkLocated (const Grammatica.Abs.Boolean_false) $1 () }
 
 RExpr :: { Grammatica.Abs.RExpr }
 RExpr
-  : RExpr1 { $1 } | RExpr '||' RExpr1 { Grammatica.Abs.Or $1 $3 }
+  : RExpr1 { $1 }
+  | RExpr '||' RExpr1 { mkBinOp Grammatica.Abs.Or $2 $1 $3 }
 
 RExpr1 :: { Grammatica.Abs.RExpr }
 RExpr1
-  : RExpr2 { $1 } | RExpr1 '&&' RExpr2 { Grammatica.Abs.And $1 $3 }
+  : RExpr2 { $1 }
+  | RExpr1 '&&' RExpr2 { mkBinOp Grammatica.Abs.And $2 $1 $3 }
 
 RExpr2 :: { Grammatica.Abs.RExpr }
-RExpr2 : RExpr3 { $1 } | '!' RExpr3 { Grammatica.Abs.Not $2 }
+RExpr2 
+  : RExpr3 { $1 }
+  | '!' RExpr3 { mkLocated Grammatica.Abs.Not $1 $2 }
 
 RExpr3 :: { Grammatica.Abs.RExpr }
 RExpr3
   : RExpr4 { $1 }
-  | RExpr4 '==' RExpr4 { Grammatica.Abs.Eq $1 $3 }
-  | RExpr4 '!=' RExpr4 { Grammatica.Abs.Neq $1 $3 }
-  | RExpr4 '<' RExpr4 { Grammatica.Abs.Lt $1 $3 }
-  | RExpr4 '<=' RExpr4 { Grammatica.Abs.LtE $1 $3 }
-  | RExpr4 '>' RExpr4 { Grammatica.Abs.Gt $1 $3 }
-  | RExpr4 '>=' RExpr4 { Grammatica.Abs.GtE $1 $3 }
+  | RExpr4 '==' RExpr4 { mkBinOp Grammatica.Abs.Eq $2 $1 $3 }
+  | RExpr4 '!=' RExpr4 { mkBinOp Grammatica.Abs.Neq $2 $1 $3 }
+  | RExpr4 '<' RExpr4 { mkBinOp Grammatica.Abs.Lt $2 $1 $3 }
+  | RExpr4 '<=' RExpr4 { mkBinOp Grammatica.Abs.LtE $2 $1 $3 }
+  | RExpr4 '>' RExpr4 { mkBinOp Grammatica.Abs.Gt $2 $1 $3 }
+  | RExpr4 '>=' RExpr4 { mkBinOp Grammatica.Abs.GtE $2 $1 $3 }
 
 RExpr4 :: { Grammatica.Abs.RExpr }
 RExpr4
   : RExpr5 { $1 }
-  | RExpr4 '+' RExpr5 { Grammatica.Abs.Add $1 $3 }
-  | RExpr4 '-' RExpr5 { Grammatica.Abs.Sub $1 $3 }
+  | RExpr4 '+' RExpr5 { mkBinOp Grammatica.Abs.Add $2 $1 $3 }
+  | RExpr4 '-' RExpr5 { mkBinOp Grammatica.Abs.Sub $2 $1 $3 }
 
 RExpr5 :: { Grammatica.Abs.RExpr }
 RExpr5
   : RExpr6 { $1 }
-  | RExpr5 '*' RExpr6 { Grammatica.Abs.Mul $1 $3 }
-  | RExpr5 '/' RExpr6 { Grammatica.Abs.Div $1 $3 }
-  | RExpr5 '%' RExpr6 { Grammatica.Abs.Mod $1 $3 }
+  | RExpr5 '*' RExpr6 { mkBinOp Grammatica.Abs.Mul $2 $1 $3 }
+  | RExpr5 '/' RExpr6 { mkBinOp Grammatica.Abs.Div $2 $1 $3 }
+  | RExpr5 '%' RExpr6 { mkBinOp Grammatica.Abs.Mod $2 $1 $3 }
 
 RExpr6 :: { Grammatica.Abs.RExpr }
 RExpr6
-  : RExpr7 { $1 } | RExpr7 '^' RExpr6 { Grammatica.Abs.Pow $1 $3 }
+  : RExpr7 { $1 } 
+  | RExpr7 '^' RExpr6 { mkBinOp Grammatica.Abs.Pow $2 $1 $3 }
 
 RExpr7 :: { Grammatica.Abs.RExpr }
 RExpr7
   : RExpr8 { $1 }
-  | '-' RExpr8 { Grammatica.Abs.Neg $2 }
-  | '&' LExpr { Grammatica.Abs.Ref $2 }
+  | '-' RExpr8 { mkLocated Grammatica.Abs.Neg $1 $2 }
+  | '&' LExpr { mkLocated Grammatica.Abs.Ref $1 $2 }
 
 RExpr8 :: { Grammatica.Abs.RExpr }
-RExpr8 : RExpr9 { $1 } | FunCall { Grammatica.Abs.FCall $1 }
+RExpr8 
+  : RExpr9 { $1 } 
+  | FunCall { Grammatica.Abs.FCall $1 }
 
 RExpr9 :: { Grammatica.Abs.RExpr }
 RExpr9
   : RExpr10 { $1 }
-  | Integer { Grammatica.Abs.Int $1 }
-  | Char { Grammatica.Abs.Char $1 }
-  | String { Grammatica.Abs.String $1 }
-  | Double { Grammatica.Abs.Float $1 }
-  | Boolean { Grammatica.Abs.Bool $1 }
-  | '[' Integer ']' BasicType '{' ListRExpr '}' { Grammatica.Abs.GoArrayLit $2 $4 $6 }
+  | Integer { mkLocated Grammatica.Abs.Int $1 $1 }
+  | Char { mkLocated Grammatica.Abs.Char $1 $1 }
+  | String { mkLocated Grammatica.Abs.String $1 $1 }
+  | Double { mkLocated Grammatica.Abs.Float $1 $1 }
+  | Boolean { mkLocated Grammatica.Abs.Bool $1 $1 }
+  | '[' Integer ']' BasicType '{' ListRExpr '}' { 
+      mkLocated (\pos -> Grammatica.Abs.GoArrayLit (Located pos $2) (Located pos $4) (Located pos $6)) $1 $7 
+    }
 
 RExpr10 :: { Grammatica.Abs.RExpr }
 RExpr10 : RExpr11 { $1 }
@@ -170,10 +206,15 @@ RExpr11 :: { Grammatica.Abs.RExpr }
 RExpr11 : RExpr12 { $1 }
 
 RExpr12 :: { Grammatica.Abs.RExpr }
-RExpr12 : '(' RExpr ')' { $2 } | LExpr { Grammatica.Abs.Lexpr $1 }
+RExpr12 
+  : '(' RExpr ')' { $2 } 
+  | LExpr { mkLocated Grammatica.Abs.Lexpr $1 $1 }
 
 FunCall :: { Grammatica.Abs.FunCall }
-FunCall : Ident '(' ListRExpr ')' { Grammatica.Abs.Call $1 $3 }
+FunCall 
+  : Ident '(' ListRExpr ')' { 
+      mkLocated (\pos -> Grammatica.Abs.Call (Located pos $1) (Located pos $3)) $2 $4 
+    }
 
 ListRExpr :: { [Grammatica.Abs.RExpr] }
 ListRExpr
@@ -182,39 +223,48 @@ ListRExpr
   | RExpr ',' ListRExpr { (:) $1 $3 }
 
 LExpr :: { Grammatica.Abs.LExpr }
-LExpr : LExpr1 { $1 } | '*' RExpr9 { Grammatica.Abs.Deref $2 }
+LExpr 
+  : LExpr1 { $1 } 
+  | '*' RExpr9 { mkLocated Grammatica.Abs.Deref $1 $2 }
 
 LExpr1 :: { Grammatica.Abs.LExpr }
 LExpr1
   : LExpr2 { $1 }
-  | '++' LExpr2 { Grammatica.Abs.PreInc $2 }
-  | '--' LExpr2 { Grammatica.Abs.PreDecr $2 }
+  | '++' LExpr2 { mkLocated Grammatica.Abs.PreInc $1 $2 }
+  | '--' LExpr2 { mkLocated Grammatica.Abs.PreDecr $1 $2 }
 
 LExpr2 :: { Grammatica.Abs.LExpr }
 LExpr2
   : LExpr3 { $1 }
-  | LExpr3 '++' { Grammatica.Abs.PostInc $1 }
-  | LExpr3 '--' { Grammatica.Abs.PostDecr $1 }
-  | BLExpr { Grammatica.Abs.BasLExpr $1 }
+  | LExpr3 '++' { mkLocated Grammatica.Abs.PostInc $2 $1 }
+  | LExpr3 '--' { mkLocated Grammatica.Abs.PostDecr $2 $1 }
+  | BLExpr { mkLocated Grammatica.Abs.BasLExpr $1 $1 }
 
 LExpr3 :: { Grammatica.Abs.LExpr }
 LExpr3 : '(' LExpr ')' { $2 }
 
 BLExpr :: { Grammatica.Abs.BLExpr }
 BLExpr
-  : Ident '[' RExpr ']' { Grammatica.Abs.ArrayEl $1 $3 }
-  | Ident { Grammatica.Abs.Id $1 }
+  : Ident '[' RExpr ']' { 
+      mkLocated (\pos -> Grammatica.Abs.ArrayEl (Located pos $1) (Located pos $3)) $2 $4 
+    }
+  | Ident { mkLocated Grammatica.Abs.Id $1 $1 }
 
+-- Continua con le altre regole mantenendo lo stesso pattern...
 Program :: { Grammatica.Abs.Program }
-Program : ListDecl { Grammatica.Abs.Prog $1 }
+Program : ListDecl { mkLocated Grammatica.Abs.Prog $1 $1 }
 
 ListDecl :: { [Grammatica.Abs.Decl] }
-ListDecl : {- empty -} { [] } | Decl ListDecl { (:) $1 $2 }
+ListDecl 
+  : {- empty -} { [] } 
+  | Decl ListDecl { (:) $1 $2 }
 
 Decl :: { Grammatica.Abs.Decl }
 Decl
-  : 'func' Ident '(' ListParameter ')' CompStmt { Grammatica.Abs.Dfun $2 $4 $6 }
-  | 'var' VarSpec ';' { Grammatica.Abs.DvarGo $2 }
+  : 'func' Ident '(' ListParameter ')' CompStmt { 
+      mkLocated (\pos -> Grammatica.Abs.Dfun (Located pos $2) (Located pos $4) (Located pos $6)) $1 $6 
+    }
+  | 'var' VarSpec ';' { mkLocated Grammatica.Abs.DvarGo $1 $2 }
 
 ListParameter :: { [Grammatica.Abs.Parameter] }
 ListParameter
@@ -223,86 +273,117 @@ ListParameter
   | Parameter ',' ListParameter { (:) $1 $3 }
 
 Parameter :: { Grammatica.Abs.Parameter }
-Parameter : 'var' Ident TypeSpec { Grammatica.Abs.Param $2 $3 }
+Parameter 
+  : 'var' Ident TypeSpec { 
+      mkLocated (\pos -> Grammatica.Abs.Param (Located pos $2) (Located pos $3)) $1 $3 
+    }
 
 VarSpec :: { Grammatica.Abs.VarSpec }
 VarSpec
-  : Ident TypeSpec '=' RExpr { Grammatica.Abs.VarSpecSingleInit $1 $2 $4 }
-  | Ident '=' RExpr { Grammatica.Abs.VarSpecArrayInit $1 $3 }
-  | Ident TypeSpec { Grammatica.Abs.VarSpecSingleNoInit $1 $2 }
+  : Ident TypeSpec '=' RExpr { 
+      mkLocated (\pos -> Grammatica.Abs.VarSpecSingleInit (Located pos $1) (Located pos $2) (Located pos $4)) $3 $4 
+    }
+  | Ident '=' RExpr { 
+      mkLocated (\pos -> Grammatica.Abs.VarSpecArrayInit (Located pos $1) (Located pos $3)) $2 $3 
+    }
+  | Ident TypeSpec { 
+      mkLocated (\pos -> Grammatica.Abs.VarSpecSingleNoInit (Located pos $1) (Located pos $2)) $1 $2 
+    }
 
 TypeSpec :: { Grammatica.Abs.TypeSpec }
 TypeSpec
-  : BasicType { Grammatica.Abs.BasTyp $1 }
-  | CompoundType { Grammatica.Abs.CompType $1 }
+  : BasicType { mkLocated Grammatica.Abs.BasTyp $1 $1 }
+  | CompoundType { mkLocated Grammatica.Abs.CompType $1 $1 }
 
 BasicType :: { Grammatica.Abs.BasicType }
 BasicType
-  : 'bool' { Grammatica.Abs.BasicType_bool }
-  | 'char' { Grammatica.Abs.BasicType_char }
-  | 'float' { Grammatica.Abs.BasicType_float }
-  | 'int' { Grammatica.Abs.BasicType_int }
-  | 'string' { Grammatica.Abs.BasicType_string }
+  : 'bool' { mkLocated (const Grammatica.Abs.BasicType_bool) $1 () }
+  | 'char' { mkLocated (const Grammatica.Abs.BasicType_char) $1 () }
+  | 'float' { mkLocated (const Grammatica.Abs.BasicType_float) $1 () }
+  | 'int' { mkLocated (const Grammatica.Abs.BasicType_int) $1 () }
+  | 'string' { mkLocated (const Grammatica.Abs.BasicType_string) $1 () }
 
 CompoundType :: { Grammatica.Abs.CompoundType }
 CompoundType
-  : '[' Integer ']' TypeSpec { Grammatica.Abs.ArrDef $2 $4 }
-  | '[' ']' TypeSpec { Grammatica.Abs.ArrUnDef $3 }
-  | '*' TypeSpec { Grammatica.Abs.Pointer $2 }
+  : '[' Integer ']' TypeSpec { 
+      mkLocated (\pos -> Grammatica.Abs.ArrDef (Located pos $2) (Located pos $4)) $1 $4 
+    }
+  | '[' ']' TypeSpec { 
+      mkLocated (\pos -> Grammatica.Abs.ArrUnDef (Located pos $3)) $1 $3 
+    }
+  | '*' TypeSpec { 
+      mkLocated (\pos -> Grammatica.Abs.Pointer (Located pos $2)) $1 $2 
+    }
 
 CompStmt :: { Grammatica.Abs.CompStmt }
-CompStmt : '{' ListBlockItem '}' { Grammatica.Abs.BlockDecl $2 }
+CompStmt 
+  : '{' ListBlockItem '}' { 
+      mkLocated (\pos -> Grammatica.Abs.BlockDecl (Located pos $2)) $1 $3 
+    }
 
 ListBlockItem :: { [Grammatica.Abs.BlockItem] }
 ListBlockItem
-  : {- empty -} { [] } | BlockItem ListBlockItem { (:) $1 $2 }
+  : {- empty -} { [] } 
+  | BlockItem ListBlockItem { (:) $1 $2 }
 
 BlockItem :: { Grammatica.Abs.BlockItem }
 BlockItem
-  : Decl { Grammatica.Abs.DeclItem $1 }
-  | Stmt { Grammatica.Abs.StmtItem $1 }
+  : Decl { mkLocated Grammatica.Abs.DeclItem $1 $1 }
+  | Stmt { mkLocated Grammatica.Abs.StmtItem $1 $1 }
 
 ListStmt :: { [Grammatica.Abs.Stmt] }
-ListStmt : {- empty -} { [] } | Stmt ListStmt { (:) $1 $2 }
+ListStmt 
+  : {- empty -} { [] } 
+  | Stmt ListStmt { (:) $1 $2 }
 
 Stmt :: { Grammatica.Abs.Stmt }
 Stmt
-  : CompStmt { Grammatica.Abs.Comp $1 }
-  | FunCall ';' { Grammatica.Abs.ProcCall $1 }
-  | JumpStmt ';' { Grammatica.Abs.Jmp $1 }
-  | IterStmt { Grammatica.Abs.Iter $1 }
-  | SelectionStmt { Grammatica.Abs.Sel $1 }
-  | LExpr Assignment_op RExpr ';' { Grammatica.Abs.Assgn $1 $2 $3 }
-  | LExpr ';' { Grammatica.Abs.LExprStmt $1 }
-  | 'var' VarSpec ';' { Grammatica.Abs.DeclStmt $2 }
-  | Ident '++' ';' { Grammatica.Abs.StmtInc $1 }
-  | Ident '--' ';' { Grammatica.Abs.StmtDec $1 }
+  : CompStmt { mkLocated Grammatica.Abs.Comp $1 $1 }
+  | FunCall ';' { mkLocated Grammatica.Abs.ProcCall $1 $2 }
+  | JumpStmt ';' { mkLocated Grammatica.Abs.Jmp $1 $2 }
+  | IterStmt { mkLocated Grammatica.Abs.Iter $1 $1 }
+  | SelectionStmt { mkLocated Grammatica.Abs.Sel $1 $1 }
+  | LExpr Assignment_op RExpr ';' { 
+      mkLocated (\pos -> Grammatica.Abs.Assgn (Located pos $1) (Located pos $2) (Located pos $3)) $4 $4 
+    }
+  | LExpr ';' { mkLocated Grammatica.Abs.LExprStmt $1 $2 }
+  | 'var' VarSpec ';' { mkLocated Grammatica.Abs.DeclStmt $2 $3 }
+  | Ident '++' ';' { mkLocated Grammatica.Abs.StmtInc $1 $3 }
+  | Ident '--' ';' { mkLocated Grammatica.Abs.StmtDec $1 $3 }
 
 Assignment_op :: { Grammatica.Abs.Assignment_op }
 Assignment_op
-  : '=' { Grammatica.Abs.Assign }
-  | '*=' { Grammatica.Abs.AssgnMul }
-  | '+=' { Grammatica.Abs.AssgnAdd }
-  | '/=' { Grammatica.Abs.AssgnDiv }
-  | '-=' { Grammatica.Abs.AssgnSub }
-  | '^=' { Grammatica.Abs.AssgnPow }
-  | '&=' { Grammatica.Abs.AssgnAnd }
-  | '|=' { Grammatica.Abs.AssgnOr }
+  : '=' { mkLocated (const Grammatica.Abs.Assign) $1 () }
+  | '*=' { mkLocated (const Grammatica.Abs.AssgnMul) $1 () }
+  | '+=' { mkLocated (const Grammatica.Abs.AssgnAdd) $1 () }
+  | '/=' { mkLocated (const Grammatica.Abs.AssgnDiv) $1 () }
+  | '-=' { mkLocated (const Grammatica.Abs.AssgnSub) $1 () }
+  | '^=' { mkLocated (const Grammatica.Abs.AssgnPow) $1 () }
+  | '&=' { mkLocated (const Grammatica.Abs.AssgnAnd) $1 () }
+  | '|=' { mkLocated (const Grammatica.Abs.AssgnOr) $1 () }
 
 JumpStmt :: { Grammatica.Abs.JumpStmt }
 JumpStmt
-  : 'break' { Grammatica.Abs.Break }
-  | 'continue' { Grammatica.Abs.Continue }
+  : 'break' { mkLocated (const Grammatica.Abs.Break) $1 () }
+  | 'continue' { mkLocated (const Grammatica.Abs.Continue) $1 () }
 
 SelectionStmt :: { Grammatica.Abs.SelectionStmt }
 SelectionStmt
-  : 'if' '(' RExpr ')' Stmt { Grammatica.Abs.IfNoElse $3 $5 }
-  | 'if' '(' RExpr ')' Stmt 'else' Stmt { Grammatica.Abs.IfElse $3 $5 $7 }
+  : 'if' '(' RExpr ')' Stmt { 
+      mkLocated (\pos -> Grammatica.Abs.IfNoElse (Located pos $3) (Located pos $5)) $1 $5 
+    }
+  | 'if' '(' RExpr ')' Stmt 'else' Stmt { 
+      mkLocated (\pos -> Grammatica.Abs.IfElse (Located pos $3) (Located pos $5) (Located pos $7)) $1 $7 
+    }
 
 IterStmt :: { Grammatica.Abs.IterStmt }
 IterStmt
-  : 'while' '(' RExpr ')' Stmt { Grammatica.Abs.While $3 $5 }
-  | 'do' Stmt 'while' '(' RExpr ')' ';' { Grammatica.Abs.DoWhile $2 $5 }
+  : 'while' '(' RExpr ')' Stmt { 
+      mkLocated (\pos -> Grammatica.Abs.While (Located pos $3) (Located pos $5)) $1 $5 
+    }
+  | 'do' Stmt 'while' '(' RExpr ')' ';' { 
+      mkLocated (\pos -> Grammatica.Abs.DoWhile (Located pos $2) (Located pos $5)) $1 $6 
+    }
 
 {
 
@@ -313,11 +394,15 @@ happyError ts = Left $
   "syntax error at " ++ tokenPos ts ++
   case ts of
     []      -> []
-    [Err _] -> " due to lexer error"
-    t:_     -> " before `" ++ (prToken t) ++ "'"
+    [(Err _, pos)] -> " due to lexer error at " ++ show pos
+    t:_     -> " before `" ++ (prToken (fst t)) ++ "' at " ++ show (getPos t)
 
 myLexer :: String -> [Token]
-myLexer = tokens
+myLexer input = 
+  let toks = Grammatica.Lex.tokens input
+      posns = Grammatica.Lex.tokenPositions input
+  in zip toks posns
 
 }
 
+}
