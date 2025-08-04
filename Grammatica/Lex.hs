@@ -432,9 +432,6 @@ tokenPosn :: Token -> Posn
 tokenPosn (PT p _) = p
 tokenPosn (Err p)  = p
 
-tokenPositions :: String -> [Posn]
-tokenPositions input = map tokenPosn (tokens input)
-
 -- | Get line and column of a token.
 tokenLineCol :: Token -> (Int, Int)
 tokenLineCol = posLineCol . tokenPosn

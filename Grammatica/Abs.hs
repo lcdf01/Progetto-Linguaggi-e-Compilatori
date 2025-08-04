@@ -6,126 +6,123 @@
 
 module Grammatica.Abs where
 
-import Prelude (Char, Double, Integer, String, Int)
+import Prelude (Char, Double, Integer, String)
 import qualified Prelude as C (Eq, Ord, Show, Read)
 import qualified Data.String
-
-data Posn = Pn !Int !Int !Int
-  deriving (C.Eq, C.Ord, C.Show, C.Read)
 
 data Boolean = Boolean_true | Boolean_false
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
 data RExpr
-    = Or Posn RExpr RExpr
-    | And Posn RExpr RExpr
-    | Not Posn RExpr
-    | Eq Posn RExpr RExpr
-    | Neq Posn RExpr RExpr
-    | Lt Posn RExpr RExpr
-    | LtE Posn RExpr RExpr
-    | Gt Posn RExpr RExpr
-    | GtE Posn RExpr RExpr
-    | Add Posn RExpr RExpr
-    | Sub Posn RExpr RExpr
-    | Mul Posn RExpr RExpr
-    | Div Posn RExpr RExpr
-    | Mod Posn RExpr RExpr
-    | Pow Posn RExpr RExpr
-    | Neg Posn RExpr
-    | Ref Posn LExpr
-    | FCall Posn FunCall
-    | Int Posn Integer
-    | Char Posn Char
-    | String Posn String
-    | Float Posn Double
-    | Bool Posn Boolean
-    | GoArrayLit Posn Integer BasicType [RExpr]
-    | Lexpr Posn LExpr
+    = Or RExpr RExpr
+    | And RExpr RExpr
+    | Not RExpr
+    | Eq RExpr RExpr
+    | Neq RExpr RExpr
+    | Lt RExpr RExpr
+    | LtE RExpr RExpr
+    | Gt RExpr RExpr
+    | GtE RExpr RExpr
+    | Add RExpr RExpr
+    | Sub RExpr RExpr
+    | Mul RExpr RExpr
+    | Div RExpr RExpr
+    | Mod RExpr RExpr
+    | Pow RExpr RExpr
+    | Neg RExpr
+    | Ref LExpr
+    | FCall FunCall
+    | Int Integer
+    | Char Char
+    | String String
+    | Float Double
+    | Bool Boolean
+    | GoArrayLit Integer BasicType [RExpr]
+    | Lexpr LExpr
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
-data FunCall = Call Posn Ident [RExpr]
+data FunCall = Call Ident [RExpr]
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
 data LExpr
-    = Deref Posn RExpr
-    | PreInc Posn LExpr
-    | PreDecr Posn LExpr
-    | PostInc Posn LExpr
-    | PostDecr Posn LExpr
-    | BasLExpr Posn BLExpr
+    = Deref RExpr
+    | PreInc LExpr
+    | PreDecr LExpr
+    | PostInc LExpr
+    | PostDecr LExpr
+    | BasLExpr BLExpr
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
-data BLExpr = ArrayEl Posn Ident RExpr | Id Posn Ident
+data BLExpr = ArrayEl Ident RExpr | Id Ident
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
-data Program = Prog Posn [Decl]
+data Program = Prog [Decl]
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
-data Decl = Dfun Posn Ident [Parameter] CompStmt | DvarGo VarSpec
+data Decl = Dfun Ident [Parameter] CompStmt | DvarGo VarSpec
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
-data Parameter = Param Posn Ident TypeSpec
+data Parameter = Param Ident TypeSpec
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
 data VarSpec
-    = VarSpecSingleInit Posn Ident TypeSpec RExpr
-    | VarSpecArrayInit Posn Ident RExpr
-    | VarSpecSingleNoInit Posn Ident TypeSpec
+    = VarSpecSingleInit Ident TypeSpec RExpr
+    | VarSpecArrayInit Ident RExpr
+    | VarSpecSingleNoInit Ident TypeSpec
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
-data TypeSpec = BasTyp Posn BasicType | CompType Posn CompoundType
+data TypeSpec = BasTyp BasicType | CompType CompoundType
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
 data BasicType
-    = BasicType_bool Posn
-    | BasicType_char Posn
-    | BasicType_float Posn
-    | BasicType_int Posn
-    | BasicType_string Posn
+    = BasicType_bool
+    | BasicType_char
+    | BasicType_float
+    | BasicType_int
+    | BasicType_string
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
 data CompoundType
-    = ArrDef Posn Integer TypeSpec | ArrUnDef Posn TypeSpec | Pointer Posn TypeSpec
+    = ArrDef Integer TypeSpec | ArrUnDef TypeSpec | Pointer TypeSpec
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
-data CompStmt = BlockDecl Posn [BlockItem]
+data CompStmt = BlockDecl [BlockItem]
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
-data BlockItem = DeclItem Posn Decl | StmtItem Posn Stmt
+data BlockItem = DeclItem Decl | StmtItem Stmt
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
 data Stmt
-    = Comp Posn CompStmt
-    | ProcCall Posn FunCall
-    | Jmp Posn JumpStmt
-    | Iter Posn IterStmt
-    | Sel Posn SelectionStmt
-    | Assgn Posn LExpr Assignment_op RExpr
-    | LExprStmt Posn LExpr
-    | DeclStmt Posn VarSpec
-    | StmtInc Posn Ident
-    | StmtDec Posn Ident
+    = Comp CompStmt
+    | ProcCall FunCall
+    | Jmp JumpStmt
+    | Iter IterStmt
+    | Sel SelectionStmt
+    | Assgn LExpr Assignment_op RExpr
+    | LExprStmt LExpr
+    | DeclStmt VarSpec
+    | StmtInc Ident
+    | StmtDec Ident
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
 data Assignment_op
-    = Assign Posn
-    | AssgnMul Posn
-    | AssgnAdd Posn
-    | AssgnDiv Posn
-    | AssgnSub Posn
-    | AssgnPow Posn
-    | AssgnAnd Posn
-    | AssgnOr Posn
+    = Assign
+    | AssgnMul
+    | AssgnAdd
+    | AssgnDiv
+    | AssgnSub
+    | AssgnPow
+    | AssgnAnd
+    | AssgnOr
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
 data JumpStmt = Break | Continue
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
-data SelectionStmt = IfNoElse Posn RExpr Stmt | IfElse Posn RExpr Stmt Stmt
+data SelectionStmt = IfNoElse RExpr Stmt | IfElse RExpr Stmt Stmt
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
-data IterStmt = While Posn RExpr Stmt | DoWhile Posn Stmt RExpr
+data IterStmt = While RExpr Stmt | DoWhile Stmt RExpr
   deriving (C.Eq, C.Ord, C.Show, C.Read)
 
 newtype Ident = Ident String

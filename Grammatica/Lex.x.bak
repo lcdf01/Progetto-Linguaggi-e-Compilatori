@@ -118,6 +118,9 @@ tokenPosn :: Token -> Posn
 tokenPosn (PT p _) = p
 tokenPosn (Err p)  = p
 
+tokenPositions :: String -> [Posn]
+tokenPositions input = map tokenPosn (tokens input)
+
 -- | Get line and column of a token.
 tokenLineCol :: Token -> (Int, Int)
 tokenLineCol = posLineCol . tokenPosn
@@ -185,9 +188,10 @@ resWords =
           (b "do" 35
              (b "continue" 34 (b "char" 33 N N) N)
              (b "false" 37 (b "else" 36 N N) N)))
-       (b "void" 44
-          (b "string" 41
-             (b "int" 40 (b "if" 39 N N) N) (b "var" 43 (b "true" 42 N N) N))
+       (b "var" 44
+          (b "int" 41
+             (b "if" 40 (b "func" 39 N N) N)
+             (b "true" 43 (b "string" 42 N N) N))
           (b "|=" 47
              (b "{" 46 (b "while" 45 N N) N) (b "}" 49 (b "||" 48 N N) N))))
   where
