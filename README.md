@@ -6,3 +6,11 @@ Abbiamo sviluppato un primo prototipo di grammatica, utilizzando BNFC, l'abbiamo
 
 30/07/2025
 Aggiunta file conflitti
+
+01/07/2025 
+Grammatica definitiva e tests
+
+---
+Date mancanti
+
+04/08/2025
