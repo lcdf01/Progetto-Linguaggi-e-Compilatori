@@ -8,9 +8,10 @@ Abbiamo sviluppato un primo prototipo di grammatica, utilizzando BNFC, l'abbiamo
 Aggiunta file conflitti
 
 01/07/2025 
-Grammatica definitiva e tests
+Grammatica definitiva e tests --> aggiunta make file e conflitti aggiornati
 
 ---
 Date mancanti
 
 04/08/2025
+Tests con posizioni e makefile
