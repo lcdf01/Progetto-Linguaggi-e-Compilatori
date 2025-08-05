@@ -25,6 +25,12 @@ import qualified GHC.Exts as Happy_GHC_Exts
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
+mkPos :: Token -> Grammatica.Abs.SourcePos
+mkPos (PT (Pn _ l c) _) = Grammatica.Abs.SourcePos l c ""
+
+positioned :: Token -> a -> Grammatica.Abs.Positioned a
+positioned tok x = Grammatica.Abs.Positioned (mkPos tok) x
+
 -- parser produced by Happy Version 1.20.1.1
 
 newtype HappyAbsSyn  = HappyAbsSyn HappyAny
@@ -34,7 +40,7 @@ type HappyAny = Happy_GHC_Exts.Any
 type HappyAny = forall a . a
 #endif
 newtype HappyWrap7 = HappyWrap7 (Grammatica.Abs.Ident)
-happyIn7 :: (Grammatica.Abs.Ident) -> (HappyAbsSyn )
+happyIn7 :: (Grammatica.Abs.Ident) -> HappyAbsSyn
 happyIn7 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap7 x)
 {-# INLINE happyIn7 #-}
 happyOut7 :: (HappyAbsSyn ) -> HappyWrap7

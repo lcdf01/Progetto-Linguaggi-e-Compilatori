@@ -19,6 +19,13 @@ import Prelude
 import qualified Grammatica.Abs
 import Grammatica.Lex
 
+-- Helper function to create Positioned values
+mkPos :: Token -> Grammatica.Abs.SourcePos
+mkPos (PT (Pn _ l c) _) = Grammatica.Abs.SourcePos l c ""
+
+positioned :: Token -> a -> Grammatica.Abs.Positioned a
+positioned tok x = Grammatica.Abs.Positioned (mkPos tok) x
+
 }
 
 %name pProgram Program
@@ -106,135 +113,181 @@ Boolean
   : 'true' { Grammatica.Abs.Boolean_true }
   | 'false' { Grammatica.Abs.Boolean_false }
 
-RExpr :: { Grammatica.Abs.RExpr }
+RExpr :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr
-  : RExpr1 { $1 } | RExpr '||' RExpr1 { Grammatica.Abs.Or $1 $3 }
+  : RExpr1 { $1 } 
+  | RExpr '||' RExpr1 { positioned $2 $ Grammatica.Abs.Or $1 $3 }
 
-RExpr1 :: { Grammatica.Abs.RExpr }
+RExpr1 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr1
-  : RExpr2 { $1 } | RExpr1 '&&' RExpr2 { Grammatica.Abs.And $1 $3 }
+  : RExpr2 { $1 } 
+  | RExpr1 '&&' RExpr2 { positioned $2 $ Grammatica.Abs.And $1 $3 }
 
-RExpr2 :: { Grammatica.Abs.RExpr }
-RExpr2 : RExpr3 { $1 } | '!' RExpr3 { Grammatica.Abs.Not $2 }
+RExpr2 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
+RExpr2 
+  : RExpr3 { $1 } 
+  | '!' RExpr3 { positioned $1 $ Grammatica.Abs.Not $2 }
 
-RExpr3 :: { Grammatica.Abs.RExpr }
+RExpr3 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr3
   : RExpr4 { $1 }
-  | RExpr4 '==' RExpr4 { Grammatica.Abs.Eq $1 $3 }
-  | RExpr4 '!=' RExpr4 { Grammatica.Abs.Neq $1 $3 }
-  | RExpr4 '<' RExpr4 { Grammatica.Abs.Lt $1 $3 }
-  | RExpr4 '<=' RExpr4 { Grammatica.Abs.LtE $1 $3 }
-  | RExpr4 '>' RExpr4 { Grammatica.Abs.Gt $1 $3 }
-  | RExpr4 '>=' RExpr4 { Grammatica.Abs.GtE $1 $3 }
+  | RExpr4 '==' RExpr4 { positioned $2 $ Grammatica.Abs.Eq $1 $3 }
+  | RExpr4 '!=' RExpr4 { positioned $2 $ Grammatica.Abs.Neq $1 $3 }
+  | RExpr4 '<' RExpr4 { positioned $2 $ Grammatica.Abs.Lt $1 $3 }
+  | RExpr4 '<=' RExpr4 { positioned $2 $ Grammatica.Abs.LtE $1 $3 }
+  | RExpr4 '>' RExpr4 { positioned $2 $ Grammatica.Abs.Gt $1 $3 }
+  | RExpr4 '>=' RExpr4 { positioned $2 $ Grammatica.Abs.GtE $1 $3 }
 
-RExpr4 :: { Grammatica.Abs.RExpr }
+RExpr4 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr4
   : RExpr5 { $1 }
-  | RExpr4 '+' RExpr5 { Grammatica.Abs.Add $1 $3 }
-  | RExpr4 '-' RExpr5 { Grammatica.Abs.Sub $1 $3 }
+  | RExpr4 '+' RExpr5 { positioned $2 $ Grammatica.Abs.Add $1 $3 }
+  | RExpr4 '-' RExpr5 { positioned $2 $ Grammatica.Abs.Sub $1 $3 }
 
-RExpr5 :: { Grammatica.Abs.RExpr }
+RExpr5 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr5
   : RExpr6 { $1 }
-  | RExpr5 '*' RExpr6 { Grammatica.Abs.Mul $1 $3 }
-  | RExpr5 '/' RExpr6 { Grammatica.Abs.Div $1 $3 }
-  | RExpr5 '%' RExpr6 { Grammatica.Abs.Mod $1 $3 }
+  | RExpr5 '*' RExpr6 { positioned $2 $ Grammatica.Abs.Mul $1 $3 }
+  | RExpr5 '/' RExpr6 { positioned $2 $ Grammatica.Abs.Div $1 $3 }
+  | RExpr5 '%' RExpr6 { positioned $2 $ Grammatica.Abs.Mod $1 $3 }
 
-RExpr6 :: { Grammatica.Abs.RExpr }
+RExpr6 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr6
-  : RExpr7 { $1 } | RExpr7 '^' RExpr6 { Grammatica.Abs.Pow $1 $3 }
+  : RExpr7 { $1 } 
+  | RExpr7 '^' RExpr6 { positioned $2 $ Grammatica.Abs.Pow $1 $3 }
 
-RExpr7 :: { Grammatica.Abs.RExpr }
+RExpr7 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr7
   : RExpr8 { $1 }
-  | '-' RExpr8 { Grammatica.Abs.Neg $2 }
-  | '&' LExpr { Grammatica.Abs.Ref $2 }
+  | '-' RExpr8 { positioned $1 $ Grammatica.Abs.Neg $2 }
+  | '&' LExpr { positioned $1 $ Grammatica.Abs.Ref $2 }
 
-RExpr8 :: { Grammatica.Abs.RExpr }
-RExpr8 : RExpr9 { $1 } | FunCall { Grammatica.Abs.FCall $1 }
+RExpr8 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
+RExpr8 
+  : RExpr9 { $1 } 
+  | FunCall { positioned $1 $ Grammatica.Abs.FCall $1 }
 
-RExpr9 :: { Grammatica.Abs.RExpr }
+RExpr9 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr9
   : RExpr10 { $1 }
-  | Integer { Grammatica.Abs.Int $1 }
-  | Char { Grammatica.Abs.Char $1 }
-  | String { Grammatica.Abs.String $1 }
-  | Double { Grammatica.Abs.Float $1 }
-  | Boolean { Grammatica.Abs.Bool $1 }
-  | '[' Integer ']' BasicType '{' ListRExpr '}' { Grammatica.Abs.GoArrayLit $2 $4 $6 }
+  | Integer { positioned $1 $ Grammatica.Abs.Int (positioned $1 $1) }
+  | Char { positioned $1 $ Grammatica.Abs.Char (positioned $1 $1) }
+  | String { positioned $1 $ Grammatica.Abs.String (positioned $1 $1) }
+  | Double { positioned $1 $ Grammatica.Abs.Float (positioned $1 $1) }
+  | Boolean { positioned $1 $ Grammatica.Abs.Bool (positioned $1 $1) }
+  | '[' Integer ']' BasicType '{' ListRExpr '}' { 
+      positioned $1 $ Grammatica.Abs.GoArrayLit 
+        (positioned $2 $2) 
+        (positioned $4 $4) 
+        $6 
+    }
 
-RExpr10 :: { Grammatica.Abs.RExpr }
+RExpr10 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr10 : RExpr11 { $1 }
 
-RExpr11 :: { Grammatica.Abs.RExpr }
+RExpr11 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr11 : RExpr12 { $1 }
 
-RExpr12 :: { Grammatica.Abs.RExpr }
-RExpr12 : '(' RExpr ')' { $2 } | LExpr { Grammatica.Abs.Lexpr $1 }
+RExpr12 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
+RExpr12 
+  : '(' RExpr ')' { $2 } 
+  | LExpr { positioned $1 $ Grammatica.Abs.Lexpr $1 }
 
-FunCall :: { Grammatica.Abs.FunCall }
-FunCall : Ident '(' ListRExpr ')' { Grammatica.Abs.Call $1 $3 }
+FunCall :: { Grammatica.Abs.Positioned Grammatica.Abs.FunCall }
+FunCall 
+  : Ident '(' ListRExpr ')' { 
+      positioned $2 $ Grammatica.Abs.Call 
+        (positioned $1 $1) 
+        $3 
+    }
 
-ListRExpr :: { [Grammatica.Abs.RExpr] }
+ListRExpr :: { [Grammatica.Abs.Positioned Grammatica.Abs.RExpr] }
 ListRExpr
   : {- empty -} { [] }
   | RExpr { (:[]) $1 }
   | RExpr ',' ListRExpr { (:) $1 $3 }
 
-LExpr :: { Grammatica.Abs.LExpr }
-LExpr : LExpr1 { $1 } | '*' RExpr9 { Grammatica.Abs.Deref $2 }
+LExpr :: { Grammatica.Abs.Positioned Grammatica.Abs.LExpr }
+LExpr 
+  : LExpr1 { $1 } 
+  | '*' RExpr9 { positioned $1 $ Grammatica.Abs.Deref $2 }
 
-LExpr1 :: { Grammatica.Abs.LExpr }
+LExpr1 :: { Grammatica.Abs.Positioned Grammatica.Abs.LExpr }
 LExpr1
   : LExpr2 { $1 }
-  | '++' LExpr2 { Grammatica.Abs.PreInc $2 }
-  | '--' LExpr2 { Grammatica.Abs.PreDecr $2 }
+  | '++' LExpr2 { positioned $1 $ Grammatica.Abs.PreInc $2 }
+  | '--' LExpr2 { positioned $1 $ Grammatica.Abs.PreDecr $2 }
 
-LExpr2 :: { Grammatica.Abs.LExpr }
+LExpr2 :: { Grammatica.Abs.Positioned Grammatica.Abs.LExpr }
 LExpr2
   : LExpr3 { $1 }
-  | LExpr3 '++' { Grammatica.Abs.PostInc $1 }
-  | LExpr3 '--' { Grammatica.Abs.PostDecr $1 }
-  | BLExpr { Grammatica.Abs.BasLExpr $1 }
+  | LExpr3 '++' { positioned $2 $ Grammatica.Abs.PostInc $1 }
+  | LExpr3 '--' { positioned $2 $ Grammatica.Abs.PostDecr $1 }
+  | BLExpr { positioned $1 $ Grammatica.Abs.BasLExpr $1 }
 
-LExpr3 :: { Grammatica.Abs.LExpr }
+LExpr3 :: { Grammatica.Abs.Positioned Grammatica.Abs.LExpr }
 LExpr3 : '(' LExpr ')' { $2 }
 
-BLExpr :: { Grammatica.Abs.BLExpr }
+BLExpr :: { Grammatica.Abs.Positioned Grammatica.Abs.BLExpr }
 BLExpr
-  : Ident '[' RExpr ']' { Grammatica.Abs.ArrayEl $1 $3 }
-  | Ident { Grammatica.Abs.Id $1 }
+  : Ident '[' RExpr ']' { positioned $2 $ Grammatica.Abs.ArrayEl (positioned $1 $1) $3 }
+  | Ident { positioned $1 $ Grammatica.Abs.Id (positioned $1 $1) }
 
-Program :: { Grammatica.Abs.Program }
-Program : ListDecl { Grammatica.Abs.Prog $1 }
+Program :: { Grammatica.Abs.Positioned Grammatica.Abs.Program }
+Program : ListDecl { positioned (head $1) $ Grammatica.Abs.Prog $1 }
 
-ListDecl :: { [Grammatica.Abs.Decl] }
-ListDecl : {- empty -} { [] } | Decl ListDecl { (:) $1 $2 }
+ListDecl :: { [Grammatica.Abs.Positioned Grammatica.Abs.Decl] }
+ListDecl 
+  : {- empty -} { [] } 
+  | Decl ListDecl { (:) $1 $2 }
 
-Decl :: { Grammatica.Abs.Decl }
+Decl :: { Grammatica.Abs.Positioned Grammatica.Abs.Decl }
 Decl
-  : 'func' Ident '(' ListParameter ')' CompStmt { Grammatica.Abs.Dfun $2 $4 $6 }
-  | 'var' VarSpec ';' { Grammatica.Abs.DvarGo $2 }
+  : 'func' Ident '(' ListParameter ')' CompStmt { 
+      positioned $1 $ Grammatica.Abs.Dfun 
+        (positioned $2 $2) 
+        $4 
+        (positioned $6 $6) 
+    }
+  | 'var' VarSpec ';' { positioned $1 $ Grammatica.Abs.DvarGo $2 }
 
-ListParameter :: { [Grammatica.Abs.Parameter] }
+ListParameter :: { [Grammatica.Abs.Positioned Grammatica.Abs.Parameter] }
 ListParameter
   : {- empty -} { [] }
   | Parameter { (:[]) $1 }
   | Parameter ',' ListParameter { (:) $1 $3 }
 
-Parameter :: { Grammatica.Abs.Parameter }
-Parameter : 'var' Ident TypeSpec { Grammatica.Abs.Param $2 $3 }
+Parameter :: { Grammatica.Abs.Positioned Grammatica.Abs.Parameter }
+Parameter 
+  : 'var' Ident TypeSpec { 
+      positioned $1 $ Grammatica.Abs.Param 
+        (positioned $2 $2) 
+        (positioned $3 $3) 
+    }
 
-VarSpec :: { Grammatica.Abs.VarSpec }
+VarSpec :: { Grammatica.Abs.Positioned Grammatica.Abs.VarSpec }
 VarSpec
-  : Ident TypeSpec '=' RExpr { Grammatica.Abs.VarSpecSingleInit $1 $2 $4 }
-  | Ident '=' RExpr { Grammatica.Abs.VarSpecArrayInit $1 $3 }
-  | Ident TypeSpec { Grammatica.Abs.VarSpecSingleNoInit $1 $2 }
+  : Ident TypeSpec '=' RExpr { 
+      positioned $3 $ Grammatica.Abs.VarSpecSingleInit 
+        (positioned $1 $1) 
+        (positioned $2 $2) 
+        $4 
+    }
+  | Ident '=' RExpr { 
+      positioned $2 $ Grammatica.Abs.VarSpecArrayInit 
+        (positioned $1 $1) 
+        $3 
+    }
+  | Ident TypeSpec { 
+      positioned $1 $ Grammatica.Abs.VarSpecSingleNoInit 
+        (positioned $1 $1) 
+        (positioned $2 $2) 
+    }
 
-TypeSpec :: { Grammatica.Abs.TypeSpec }
+TypeSpec :: { Grammatica.Abs.Positioned Grammatica.Abs.TypeSpec }
 TypeSpec
-  : BasicType { Grammatica.Abs.BasTyp $1 }
-  | CompoundType { Grammatica.Abs.CompType $1 }
+  : BasicType { positioned $1 $ Grammatica.Abs.BasTyp (positioned $1 $1) }
+  | CompoundType { positioned $1 $ Grammatica.Abs.CompType (positioned $1 $1) }
 
 BasicType :: { Grammatica.Abs.BasicType }
 BasicType
@@ -246,63 +299,74 @@ BasicType
 
 CompoundType :: { Grammatica.Abs.CompoundType }
 CompoundType
-  : '[' Integer ']' TypeSpec { Grammatica.Abs.ArrDef $2 $4 }
-  | '[' ']' TypeSpec { Grammatica.Abs.ArrUnDef $3 }
-  | '*' TypeSpec { Grammatica.Abs.Pointer $2 }
+  : '[' Integer ']' TypeSpec { Grammatica.Abs.ArrDef (positioned $2 $2) (positioned $4 $4) }
+  | '[' ']' TypeSpec { Grammatica.Abs.ArrUnDef (positioned $3 $3) }
+  | '*' TypeSpec { Grammatica.Abs.Pointer (positioned $2 $2) }
 
-CompStmt :: { Grammatica.Abs.CompStmt }
-CompStmt : '{' ListBlockItem '}' { Grammatica.Abs.BlockDecl $2 }
+CompStmt :: { Grammatica.Abs.Positioned Grammatica.Abs.CompStmt }
+CompStmt : '{' ListBlockItem '}' { positioned $1 $ Grammatica.Abs.BlockDecl $2 }
 
-ListBlockItem :: { [Grammatica.Abs.BlockItem] }
+ListBlockItem :: { [Grammatica.Abs.Positioned Grammatica.Abs.BlockItem] }
 ListBlockItem
-  : {- empty -} { [] } | BlockItem ListBlockItem { (:) $1 $2 }
+  : {- empty -} { [] } 
+  | BlockItem ListBlockItem { (:) $1 $2 }
 
-BlockItem :: { Grammatica.Abs.BlockItem }
+BlockItem :: { Grammatica.Abs.Positioned Grammatica.Abs.BlockItem }
 BlockItem
-  : Decl { Grammatica.Abs.DeclItem $1 }
-  | Stmt { Grammatica.Abs.StmtItem $1 }
+  : Decl { positioned $1 $ Grammatica.Abs.DeclItem $1 }
+  | Stmt { positioned $1 $ Grammatica.Abs.StmtItem $1 }
 
-ListStmt :: { [Grammatica.Abs.Stmt] }
-ListStmt : {- empty -} { [] } | Stmt ListStmt { (:) $1 $2 }
+ListStmt :: { [Grammatica.Abs.Positioned Grammatica.Abs.Stmt] }
+ListStmt 
+  : {- empty -} { [] } 
+  | Stmt ListStmt { (:) $1 $2 }
 
-Stmt :: { Grammatica.Abs.Stmt }
+Stmt :: { Grammatica.Abs.Positioned Grammatica.Abs.Stmt }
 Stmt
-  : CompStmt { Grammatica.Abs.Comp $1 }
-  | FunCall ';' { Grammatica.Abs.ProcCall $1 }
-  | JumpStmt ';' { Grammatica.Abs.Jmp $1 }
-  | IterStmt { Grammatica.Abs.Iter $1 }
-  | SelectionStmt { Grammatica.Abs.Sel $1 }
-  | LExpr Assignment_op RExpr ';' { Grammatica.Abs.Assgn $1 $2 $3 }
-  | LExpr ';' { Grammatica.Abs.LExprStmt $1 }
-  | 'var' VarSpec ';' { Grammatica.Abs.DeclStmt $2 }
-  | Ident '++' ';' { Grammatica.Abs.StmtInc $1 }
-  | Ident '--' ';' { Grammatica.Abs.StmtDec $1 }
+  : CompStmt { positioned $1 $ Grammatica.Abs.Comp $1 }
+  | FunCall ';' { positioned $1 $ Grammatica.Abs.ProcCall $1 }
+  | JumpStmt ';' { positioned $1 $ Grammatica.Abs.Jmp $1 }
+  | IterStmt { positioned $1 $ Grammatica.Abs.Iter $1 }
+  | SelectionStmt { positioned $1 $ Grammatica.Abs.Sel $1 }
+  | LExpr Assignment_op RExpr ';' { positioned $2 $ Grammatica.Abs.Assgn $1 $2 $3 }
+  | LExpr ';' { positioned $1 $ Grammatica.Abs.LExprStmt $1 }
+  | 'var' VarSpec ';' { positioned $1 $ Grammatica.Abs.DeclStmt $2 }
+  | Ident '++' ';' { positioned $2 $ Grammatica.Abs.StmtInc (positioned $1 $1) }
+  | Ident '--' ';' { positioned $2 $ Grammatica.Abs.StmtDec (positioned $1 $1) }
 
-Assignment_op :: { Grammatica.Abs.Assignment_op }
+Assignment_op :: { Grammatica.Abs.Positioned Grammatica.Abs.Assignment_op }
 Assignment_op
-  : '=' { Grammatica.Abs.Assign }
-  | '*=' { Grammatica.Abs.AssgnMul }
-  | '+=' { Grammatica.Abs.AssgnAdd }
-  | '/=' { Grammatica.Abs.AssgnDiv }
-  | '-=' { Grammatica.Abs.AssgnSub }
-  | '^=' { Grammatica.Abs.AssgnPow }
-  | '&=' { Grammatica.Abs.AssgnAnd }
-  | '|=' { Grammatica.Abs.AssgnOr }
+  : '=' { positioned $1 $ Grammatica.Abs.Assign }
+  | '*=' { positioned $1 $ Grammatica.Abs.AssgnMul }
+  | '+=' { positioned $1 $ Grammatica.Abs.AssgnAdd }
+  | '/=' { positioned $1 $ Grammatica.Abs.AssgnDiv }
+  | '-=' { positioned $1 $ Grammatica.Abs.AssgnSub }
+  | '^=' { positioned $1 $ Grammatica.Abs.AssgnPow }
+  | '&=' { positioned $1 $ Grammatica.Abs.AssgnAnd }
+  | '|=' { positioned $1 $ Grammatica.Abs.AssgnOr }
 
-JumpStmt :: { Grammatica.Abs.JumpStmt }
+JumpStmt :: { Grammatica.Abs.Positioned Grammatica.Abs.JumpStmt }
 JumpStmt
-  : 'break' { Grammatica.Abs.Break }
-  | 'continue' { Grammatica.Abs.Continue }
+  : 'break' { positioned $1 $ Grammatica.Abs.Break }
+  | 'continue' { positioned $1 $ Grammatica.Abs.Continue }
 
-SelectionStmt :: { Grammatica.Abs.SelectionStmt }
+SelectionStmt :: { Grammatica.Abs.Positioned Grammatica.Abs.SelectionStmt }
 SelectionStmt
-  : 'if' '(' RExpr ')' Stmt { Grammatica.Abs.IfNoElse $3 $5 }
-  | 'if' '(' RExpr ')' Stmt 'else' Stmt { Grammatica.Abs.IfElse $3 $5 $7 }
+  : 'if' '(' RExpr ')' Stmt { 
+      positioned $1 $ Grammatica.Abs.IfNoElse $3 $5 
+    }
+  | 'if' '(' RExpr ')' Stmt 'else' Stmt { 
+      positioned $1 $ Grammatica.Abs.IfElse $3 $5 $7 
+    }
 
-IterStmt :: { Grammatica.Abs.IterStmt }
+IterStmt :: { Grammatica.Abs.Positioned Grammatica.Abs.IterStmt }
 IterStmt
-  : 'while' '(' RExpr ')' Stmt { Grammatica.Abs.While $3 $5 }
-  | 'do' Stmt 'while' '(' RExpr ')' ';' { Grammatica.Abs.DoWhile $2 $5 }
+  : 'while' '(' RExpr ')' Stmt { 
+      positioned $1 $ Grammatica.Abs.While $3 $5 
+    }
+  | 'do' Stmt 'while' '(' RExpr ')' ';' { 
+      positioned $1 $ Grammatica.Abs.DoWhile $2 $5 
+    }
 
 {
 
@@ -320,4 +384,3 @@ myLexer :: String -> [Token]
 myLexer = tokens
 
 }
-

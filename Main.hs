@@ -5,8 +5,8 @@ module Main where
 
 import System.Environment (getArgs)
 import System.IO (readFile)
-import Grammatica.Par (pProgram)
-import Grammatica.Lex (myLexer)
+import Grammatica.Par (pProgram, myLexer)
+--import Grammatica.Lex (myLexer)
 import Grammatica.Abs (Program)
 import TypeChecker (typeCheckProgram)
 import TypeEnv (prettyPrintError)
