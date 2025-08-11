@@ -19,13 +19,6 @@ import Prelude
 import qualified Grammatica.Abs
 import Grammatica.Lex
 
--- Helper function to create Positioned values
-mkPos :: Token -> Grammatica.Abs.SourcePos
-mkPos (PT (Pn _ l c) _) = Grammatica.Abs.SourcePos l c ""
-
-positioned :: Token -> a -> Grammatica.Abs.Positioned a
-positioned tok x = Grammatica.Abs.Positioned (mkPos tok) x
-
 }
 
 %name pProgram Program
@@ -165,20 +158,20 @@ RExpr7
 RExpr8 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr8 
   : RExpr9 { $1 } 
-  | FunCall { positioned $1 $ Grammatica.Abs.FCall $1 }
+  | FunCall { positionedFrom $1 (Grammatica.Abs.FCall $1) }
 
 RExpr9 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr9
   : RExpr10 { $1 }
-  | Integer { positioned $1 $ Grammatica.Abs.Int (positioned $1 $1) }
-  | Char { positioned $1 $ Grammatica.Abs.Char (positioned $1 $1) }
-  | String { positioned $1 $ Grammatica.Abs.String (positioned $1 $1) }
-  | Double { positioned $1 $ Grammatica.Abs.Float (positioned $1 $1) }
-  | Boolean { positioned $1 $ Grammatica.Abs.Bool (positioned $1 $1) }
+  | Integer { positionedLiteral $ Grammatica.Abs.Int $ positionedLiteral $1 }
+  | Char { positionedLiteral $ Grammatica.Abs.Char $ positionedLiteral $1 }
+  | String { positionedLiteral $ Grammatica.Abs.String $ positionedLiteral $1 }
+  | Double { positionedLiteral $ Grammatica.Abs.Float $ positionedLiteral $1 }
+  | Boolean { positionedLiteral $ Grammatica.Abs.Bool $ positionedLiteral $1 }
   | '[' Integer ']' BasicType '{' ListRExpr '}' { 
       positioned $1 $ Grammatica.Abs.GoArrayLit 
-        (positioned $2 $2) 
-        (positioned $4 $4) 
+        (positionedLiteral $2) 
+        (positionedLiteral $4) 
         $6 
     }
 
@@ -191,13 +184,13 @@ RExpr11 : RExpr12 { $1 }
 RExpr12 :: { Grammatica.Abs.Positioned Grammatica.Abs.RExpr }
 RExpr12 
   : '(' RExpr ')' { $2 } 
-  | LExpr { positioned $1 $ Grammatica.Abs.Lexpr $1 }
+  | LExpr { positionedFrom $1 (Grammatica.Abs.Lexpr $1) }
 
 FunCall :: { Grammatica.Abs.Positioned Grammatica.Abs.FunCall }
 FunCall 
   : Ident '(' ListRExpr ')' { 
       positioned $2 $ Grammatica.Abs.Call 
-        (positioned $1 $1) 
+        (positionedLiteral $1) 
         $3 
     }
 
@@ -223,18 +216,18 @@ LExpr2
   : LExpr3 { $1 }
   | LExpr3 '++' { positioned $2 $ Grammatica.Abs.PostInc $1 }
   | LExpr3 '--' { positioned $2 $ Grammatica.Abs.PostDecr $1 }
-  | BLExpr { positioned $1 $ Grammatica.Abs.BasLExpr $1 }
+  | BLExpr { positionedFrom $1 (Grammatica.Abs.BasLExpr $1) }
 
 LExpr3 :: { Grammatica.Abs.Positioned Grammatica.Abs.LExpr }
 LExpr3 : '(' LExpr ')' { $2 }
 
 BLExpr :: { Grammatica.Abs.Positioned Grammatica.Abs.BLExpr }
 BLExpr
-  : Ident '[' RExpr ']' { positioned $2 $ Grammatica.Abs.ArrayEl (positioned $1 $1) $3 }
-  | Ident { positioned $1 $ Grammatica.Abs.Id (positioned $1 $1) }
+  : Ident '[' RExpr ']' { positioned $2 $ Grammatica.Abs.ArrayEl (positionedLiteral $1) $3 }
+  | Ident { positionedLiteral $ Grammatica.Abs.Id $ positionedLiteral $1 }
 
 Program :: { Grammatica.Abs.Positioned Grammatica.Abs.Program }
-Program : ListDecl { positioned (head $1) $ Grammatica.Abs.Prog $1 }
+Program : ListDecl { positionedFromList $1 (Grammatica.Abs.Prog $1) }
 
 ListDecl :: { [Grammatica.Abs.Positioned Grammatica.Abs.Decl] }
 ListDecl 
@@ -245,9 +238,9 @@ Decl :: { Grammatica.Abs.Positioned Grammatica.Abs.Decl }
 Decl
   : 'func' Ident '(' ListParameter ')' CompStmt { 
       positioned $1 $ Grammatica.Abs.Dfun 
-        (positioned $2 $2) 
+        (positionedLiteral $2) 
         $4 
-        (positioned $6 $6) 
+        $6
     }
   | 'var' VarSpec ';' { positioned $1 $ Grammatica.Abs.DvarGo $2 }
 
@@ -261,33 +254,33 @@ Parameter :: { Grammatica.Abs.Positioned Grammatica.Abs.Parameter }
 Parameter 
   : 'var' Ident TypeSpec { 
       positioned $1 $ Grammatica.Abs.Param 
-        (positioned $2 $2) 
-        (positioned $3 $3) 
+        (positionedLiteral $2) 
+        $3 
     }
 
 VarSpec :: { Grammatica.Abs.Positioned Grammatica.Abs.VarSpec }
 VarSpec
   : Ident TypeSpec '=' RExpr { 
       positioned $3 $ Grammatica.Abs.VarSpecSingleInit 
-        (positioned $1 $1) 
-        (positioned $2 $2) 
+        (positionedLiteral $1) 
+        $2 
         $4 
     }
   | Ident '=' RExpr { 
       positioned $2 $ Grammatica.Abs.VarSpecArrayInit 
-        (positioned $1 $1) 
+        (positionedLiteral $1) 
         $3 
     }
   | Ident TypeSpec { 
-      positioned $1 $ Grammatica.Abs.VarSpecSingleNoInit 
-        (positioned $1 $1) 
-        (positioned $2 $2) 
+      positionedLiteral $ Grammatica.Abs.VarSpecSingleNoInit 
+        (positionedLiteral $1) 
+        $2 
     }
 
 TypeSpec :: { Grammatica.Abs.Positioned Grammatica.Abs.TypeSpec }
 TypeSpec
-  : BasicType { positioned $1 $ Grammatica.Abs.BasTyp (positioned $1 $1) }
-  | CompoundType { positioned $1 $ Grammatica.Abs.CompType (positioned $1 $1) }
+  : BasicType { positionedLiteral $ Grammatica.Abs.BasTyp $ positionedLiteral $1 }
+  | CompoundType { positionedLiteral $ Grammatica.Abs.CompType $ positionedLiteral $1 }
 
 BasicType :: { Grammatica.Abs.BasicType }
 BasicType
@@ -299,9 +292,9 @@ BasicType
 
 CompoundType :: { Grammatica.Abs.CompoundType }
 CompoundType
-  : '[' Integer ']' TypeSpec { Grammatica.Abs.ArrDef (positioned $2 $2) (positioned $4 $4) }
-  | '[' ']' TypeSpec { Grammatica.Abs.ArrUnDef (positioned $3 $3) }
-  | '*' TypeSpec { Grammatica.Abs.Pointer (positioned $2 $2) }
+  : '[' Integer ']' TypeSpec { Grammatica.Abs.ArrDef (positionedLiteral $2) $4 }
+  | '[' ']' TypeSpec { Grammatica.Abs.ArrUnDef $3 }
+  | '*' TypeSpec { Grammatica.Abs.Pointer $2 }
 
 CompStmt :: { Grammatica.Abs.Positioned Grammatica.Abs.CompStmt }
 CompStmt : '{' ListBlockItem '}' { positioned $1 $ Grammatica.Abs.BlockDecl $2 }
@@ -313,8 +306,8 @@ ListBlockItem
 
 BlockItem :: { Grammatica.Abs.Positioned Grammatica.Abs.BlockItem }
 BlockItem
-  : Decl { positioned $1 $ Grammatica.Abs.DeclItem $1 }
-  | Stmt { positioned $1 $ Grammatica.Abs.StmtItem $1 }
+  : Decl { positionedFrom $1 (Grammatica.Abs.DeclItem $1) }
+  | Stmt { positionedFrom $1 (Grammatica.Abs.StmtItem $1) }
 
 ListStmt :: { [Grammatica.Abs.Positioned Grammatica.Abs.Stmt] }
 ListStmt 
@@ -323,16 +316,16 @@ ListStmt
 
 Stmt :: { Grammatica.Abs.Positioned Grammatica.Abs.Stmt }
 Stmt
-  : CompStmt { positioned $1 $ Grammatica.Abs.Comp $1 }
-  | FunCall ';' { positioned $1 $ Grammatica.Abs.ProcCall $1 }
-  | JumpStmt ';' { positioned $1 $ Grammatica.Abs.Jmp $1 }
-  | IterStmt { positioned $1 $ Grammatica.Abs.Iter $1 }
-  | SelectionStmt { positioned $1 $ Grammatica.Abs.Sel $1 }
-  | LExpr Assignment_op RExpr ';' { positioned $2 $ Grammatica.Abs.Assgn $1 $2 $3 }
-  | LExpr ';' { positioned $1 $ Grammatica.Abs.LExprStmt $1 }
+  : CompStmt { positionedFrom $1 (Grammatica.Abs.Comp $1) }
+  | FunCall ';' { positionedFrom $1 (Grammatica.Abs.ProcCall $1) }
+  | JumpStmt ';' { positionedFrom $1 (Grammatica.Abs.Jmp $1) }
+  | IterStmt { positionedFrom $1 (Grammatica.Abs.Iter $1) }
+  | SelectionStmt { positionedFrom $1 (Grammatica.Abs.Sel $1) }
+  | LExpr Assignment_op RExpr ';' { positionedFrom $2 (Grammatica.Abs.Assgn $1 $2 $3) }
+  | LExpr ';' { positionedFrom $1 (Grammatica.Abs.LExprStmt $1) }
   | 'var' VarSpec ';' { positioned $1 $ Grammatica.Abs.DeclStmt $2 }
-  | Ident '++' ';' { positioned $2 $ Grammatica.Abs.StmtInc (positioned $1 $1) }
-  | Ident '--' ';' { positioned $2 $ Grammatica.Abs.StmtDec (positioned $1 $1) }
+  | Ident '++' ';' { positioned $2 $ Grammatica.Abs.StmtInc (positionedLiteral $1) }
+  | Ident '--' ';' { positioned $2 $ Grammatica.Abs.StmtDec (positionedLiteral $1) }
 
 Assignment_op :: { Grammatica.Abs.Positioned Grammatica.Abs.Assignment_op }
 Assignment_op
@@ -369,6 +362,27 @@ IterStmt
     }
 
 {
+
+-- Helper function to create Positioned values
+mkPos :: Token -> Grammatica.Abs.SourcePos
+mkPos (PT (Pn _ l c) _) = Grammatica.Abs.SourcePos l c ""
+
+-- Per creare positioned da un Token
+positioned :: Token -> a -> Grammatica.Abs.Positioned a
+positioned tok x = Grammatica.Abs.Positioned (mkPos tok) x
+
+-- Per creare positioned da un valore letterale (usando posizione dummy)
+positionedLiteral :: a -> Grammatica.Abs.Positioned a
+positionedLiteral x = Grammatica.Abs.Positioned (Grammatica.Abs.SourcePos 0 0 "") x
+
+-- Per creare positioned copiando la posizione da un altro Positioned
+positionedFrom :: Grammatica.Abs.Positioned b -> c -> Grammatica.Abs.Positioned c
+positionedFrom (Grammatica.Abs.Positioned pos _) x = Grammatica.Abs.Positioned pos x
+
+-- Per creare positioned da una lista non vuota
+positionedFromList :: [Grammatica.Abs.Positioned a] -> b -> Grammatica.Abs.Positioned b
+positionedFromList [] x = Grammatica.Abs.Positioned (Grammatica.Abs.SourcePos 0 0 "") x
+positionedFromList ((Grammatica.Abs.Positioned pos _):_) x = Grammatica.Abs.Positioned pos x
 
 type Err = Either String
 

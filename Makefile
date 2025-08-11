@@ -1,29 +1,46 @@
-# File: Makefile
-# Progetto Linguaggi e Compilatori - Compilazione automatica
+## Makefile (fuori da ./Grammatica)
 
-GHC=ghc -package array
-EXEC=TypeCheck
-MAIN=Main.hs
+# Toolchain
+GHC        = ghc -package array
+HAPPY      = happy
+HAPPY_OPTS = --array --info --ghc --coerce
+ALEX       = alex
+ALEX_OPTS  = --ghc
 
-GRAMDIR=Grammatica
-GRAMFILES=$(GRAMDIR)/Abs.hs \
-           $(GRAMDIR)/Lex.hs \
-           $(GRAMDIR)/Par.hs \
-           $(GRAMDIR)/Print.hs \
-           $(GRAMDIR)/Skel.hs
+# Cartelle / nomi
+DIR   = Grammatica
+BIN   = Test              # nome eseguibile (cambialo se vuoi)
+MAIN  = $(DIR)/Test.hs
 
-SOURCES=$(MAIN) TypeChecker.hs TypeEnv.hs TypeRules.hs $(GRAMFILES)
+# Sorgenti
+GEN_HS    = $(DIR)/Lex.hs $(DIR)/Par.hs
+STATIC_HS = $(DIR)/Abs.hs $(DIR)/Print.hs $(DIR)/Skel.hs
+SOURCES   = $(STATIC_HS) $(GEN_HS) $(MAIN)
 
-all: $(EXEC)
+.PHONY: all clean distclean demo
 
-$(EXEC): $(SOURCES)
-	$(GHC) --make $(MAIN) -o $(EXEC)
+# Obiettivo di default
+all: $(BIN)
 
-demo: all
-	./$(EXEC) Testing.txt
+# Alex / Happy (file dentro ./Grammatica)
+$(DIR)/Lex.hs: $(DIR)/Lex.x
+	$(ALEX) $(ALEX_OPTS) -o $@ $<
 
+$(DIR)/Par.hs: $(DIR)/Par.y
+	$(HAPPY) $(HAPPY_OPTS) -o $@ $<
+
+# Link finale: metto .o/.hi in ./Grammatica e cerco moduli lì
+$(BIN): $(SOURCES)
+	$(GHC) $(GHC_OPTS) -i$(DIR) -odir $(DIR) -hidir $(DIR) -o $(BIN) $(MAIN)
+
+# Demo (personalizza i file input)
+demo: $(BIN)
+	@echo "== Demo =="
+	./$(BIN) < Testing.txt || true
+
+# Pulizia
 clean:
-	rm -f *.o *.hi $(EXEC)
-	rm -f $(GRAMDIR)/*.o $(GRAMDIR)/*.hi
+	- rm -f $(DIR)/*.o $(DIR)/*.hi
 
-.PHONY: all demo clean
+distclean: clean
+	- rm -f $(DIR)/Lex.hs $(DIR)/Par.hs $(BIN)

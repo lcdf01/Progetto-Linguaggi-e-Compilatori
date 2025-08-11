@@ -24,6 +24,19 @@ import qualified Grammatica.Abs
 
 -- | The top-level printing method.
 
+-- Mostra "file:line:col" se filename non è vuoto, altrimenti "line:col"
+showPos :: Grammatica.Abs.SourcePos -> ShowS
+showPos (Grammatica.Abs.SourcePos l c f) =
+  (if null f then id else showString f . showChar ':') . shows l . showChar ':' . shows c
+
+-- Doc con il tag posizione, es. @[12:7] o file.go:12:7
+posDoc :: Grammatica.Abs.SourcePos -> Doc
+posDoc p = doc (showChar '@' . showChar '[' . showPos p . showChar ']')
+
+-- Stampa trasparente del contenuto + suffisso posizione
+instance Print a => Print (Grammatica.Abs.Positioned a) where
+  prt i (Grammatica.Abs.Positioned p x) = concatD [prt i x, posDoc p]
+
 printTree :: Print a => a -> String
 printTree = render . prt 0
 
@@ -166,7 +179,7 @@ instance Print Grammatica.Abs.RExpr where
     Grammatica.Abs.FCall funcall -> prPrec i 8 (concatD [prt 0 funcall])
     Grammatica.Abs.Int n -> prPrec i 9 (concatD [prt 0 n])
     Grammatica.Abs.Char c -> prPrec i 9 (concatD [prt 0 c])
-    Grammatica.Abs.String str -> prPrec i 9 (concatD [printString str])
+    Grammatica.Abs.String str -> prPrec i 9 (concatD [prt 0 str])
     Grammatica.Abs.Float d -> prPrec i 9 (concatD [prt 0 d])
     Grammatica.Abs.Bool boolean -> prPrec i 9 (concatD [prt 0 boolean])
     Grammatica.Abs.GoArrayLit n basictype rexprs -> prPrec i 9 (concatD [doc (showString "["), prt 0 n, doc (showString "]"), prt 0 basictype, doc (showString "{"), prt 0 rexprs, doc (showString "}")])

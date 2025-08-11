@@ -25,12 +25,6 @@ import qualified GHC.Exts as Happy_GHC_Exts
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
-mkPos :: Token -> Grammatica.Abs.SourcePos
-mkPos (PT (Pn _ l c) _) = Grammatica.Abs.SourcePos l c ""
-
-positioned :: Token -> a -> Grammatica.Abs.Positioned a
-positioned tok x = Grammatica.Abs.Positioned (mkPos tok) x
-
 -- parser produced by Happy Version 1.20.1.1
 
 newtype HappyAbsSyn  = HappyAbsSyn HappyAny
@@ -40,7 +34,7 @@ type HappyAny = Happy_GHC_Exts.Any
 type HappyAny = forall a . a
 #endif
 newtype HappyWrap7 = HappyWrap7 (Grammatica.Abs.Ident)
-happyIn7 :: (Grammatica.Abs.Ident) -> HappyAbsSyn
+happyIn7 :: (Grammatica.Abs.Ident) -> (HappyAbsSyn )
 happyIn7 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap7 x)
 {-# INLINE happyIn7 #-}
 happyOut7 :: (HappyAbsSyn ) -> HappyWrap7
@@ -81,190 +75,190 @@ happyIn12 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap12 x)
 happyOut12 :: (HappyAbsSyn ) -> HappyWrap12
 happyOut12 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut12 #-}
-newtype HappyWrap13 = HappyWrap13 (Grammatica.Abs.RExpr)
-happyIn13 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap13 = HappyWrap13 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn13 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn13 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap13 x)
 {-# INLINE happyIn13 #-}
 happyOut13 :: (HappyAbsSyn ) -> HappyWrap13
 happyOut13 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut13 #-}
-newtype HappyWrap14 = HappyWrap14 (Grammatica.Abs.RExpr)
-happyIn14 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap14 = HappyWrap14 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn14 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn14 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap14 x)
 {-# INLINE happyIn14 #-}
 happyOut14 :: (HappyAbsSyn ) -> HappyWrap14
 happyOut14 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut14 #-}
-newtype HappyWrap15 = HappyWrap15 (Grammatica.Abs.RExpr)
-happyIn15 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap15 = HappyWrap15 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn15 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn15 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap15 x)
 {-# INLINE happyIn15 #-}
 happyOut15 :: (HappyAbsSyn ) -> HappyWrap15
 happyOut15 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut15 #-}
-newtype HappyWrap16 = HappyWrap16 (Grammatica.Abs.RExpr)
-happyIn16 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap16 = HappyWrap16 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn16 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn16 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap16 x)
 {-# INLINE happyIn16 #-}
 happyOut16 :: (HappyAbsSyn ) -> HappyWrap16
 happyOut16 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut16 #-}
-newtype HappyWrap17 = HappyWrap17 (Grammatica.Abs.RExpr)
-happyIn17 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap17 = HappyWrap17 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn17 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn17 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap17 x)
 {-# INLINE happyIn17 #-}
 happyOut17 :: (HappyAbsSyn ) -> HappyWrap17
 happyOut17 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut17 #-}
-newtype HappyWrap18 = HappyWrap18 (Grammatica.Abs.RExpr)
-happyIn18 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap18 = HappyWrap18 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn18 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn18 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap18 x)
 {-# INLINE happyIn18 #-}
 happyOut18 :: (HappyAbsSyn ) -> HappyWrap18
 happyOut18 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut18 #-}
-newtype HappyWrap19 = HappyWrap19 (Grammatica.Abs.RExpr)
-happyIn19 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap19 = HappyWrap19 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn19 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn19 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap19 x)
 {-# INLINE happyIn19 #-}
 happyOut19 :: (HappyAbsSyn ) -> HappyWrap19
 happyOut19 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut19 #-}
-newtype HappyWrap20 = HappyWrap20 (Grammatica.Abs.RExpr)
-happyIn20 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap20 = HappyWrap20 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn20 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn20 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap20 x)
 {-# INLINE happyIn20 #-}
 happyOut20 :: (HappyAbsSyn ) -> HappyWrap20
 happyOut20 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut20 #-}
-newtype HappyWrap21 = HappyWrap21 (Grammatica.Abs.RExpr)
-happyIn21 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap21 = HappyWrap21 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn21 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn21 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap21 x)
 {-# INLINE happyIn21 #-}
 happyOut21 :: (HappyAbsSyn ) -> HappyWrap21
 happyOut21 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut21 #-}
-newtype HappyWrap22 = HappyWrap22 (Grammatica.Abs.RExpr)
-happyIn22 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap22 = HappyWrap22 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn22 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn22 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap22 x)
 {-# INLINE happyIn22 #-}
 happyOut22 :: (HappyAbsSyn ) -> HappyWrap22
 happyOut22 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut22 #-}
-newtype HappyWrap23 = HappyWrap23 (Grammatica.Abs.RExpr)
-happyIn23 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap23 = HappyWrap23 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn23 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn23 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap23 x)
 {-# INLINE happyIn23 #-}
 happyOut23 :: (HappyAbsSyn ) -> HappyWrap23
 happyOut23 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut23 #-}
-newtype HappyWrap24 = HappyWrap24 (Grammatica.Abs.RExpr)
-happyIn24 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap24 = HappyWrap24 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn24 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn24 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap24 x)
 {-# INLINE happyIn24 #-}
 happyOut24 :: (HappyAbsSyn ) -> HappyWrap24
 happyOut24 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut24 #-}
-newtype HappyWrap25 = HappyWrap25 (Grammatica.Abs.RExpr)
-happyIn25 :: (Grammatica.Abs.RExpr) -> (HappyAbsSyn )
+newtype HappyWrap25 = HappyWrap25 (Grammatica.Abs.Positioned Grammatica.Abs.RExpr)
+happyIn25 :: (Grammatica.Abs.Positioned Grammatica.Abs.RExpr) -> (HappyAbsSyn )
 happyIn25 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap25 x)
 {-# INLINE happyIn25 #-}
 happyOut25 :: (HappyAbsSyn ) -> HappyWrap25
 happyOut25 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut25 #-}
-newtype HappyWrap26 = HappyWrap26 (Grammatica.Abs.FunCall)
-happyIn26 :: (Grammatica.Abs.FunCall) -> (HappyAbsSyn )
+newtype HappyWrap26 = HappyWrap26 (Grammatica.Abs.Positioned Grammatica.Abs.FunCall)
+happyIn26 :: (Grammatica.Abs.Positioned Grammatica.Abs.FunCall) -> (HappyAbsSyn )
 happyIn26 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap26 x)
 {-# INLINE happyIn26 #-}
 happyOut26 :: (HappyAbsSyn ) -> HappyWrap26
 happyOut26 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut26 #-}
-newtype HappyWrap27 = HappyWrap27 ([Grammatica.Abs.RExpr])
-happyIn27 :: ([Grammatica.Abs.RExpr]) -> (HappyAbsSyn )
+newtype HappyWrap27 = HappyWrap27 ([Grammatica.Abs.Positioned Grammatica.Abs.RExpr])
+happyIn27 :: ([Grammatica.Abs.Positioned Grammatica.Abs.RExpr]) -> (HappyAbsSyn )
 happyIn27 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap27 x)
 {-# INLINE happyIn27 #-}
 happyOut27 :: (HappyAbsSyn ) -> HappyWrap27
 happyOut27 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut27 #-}
-newtype HappyWrap28 = HappyWrap28 (Grammatica.Abs.LExpr)
-happyIn28 :: (Grammatica.Abs.LExpr) -> (HappyAbsSyn )
+newtype HappyWrap28 = HappyWrap28 (Grammatica.Abs.Positioned Grammatica.Abs.LExpr)
+happyIn28 :: (Grammatica.Abs.Positioned Grammatica.Abs.LExpr) -> (HappyAbsSyn )
 happyIn28 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap28 x)
 {-# INLINE happyIn28 #-}
 happyOut28 :: (HappyAbsSyn ) -> HappyWrap28
 happyOut28 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut28 #-}
-newtype HappyWrap29 = HappyWrap29 (Grammatica.Abs.LExpr)
-happyIn29 :: (Grammatica.Abs.LExpr) -> (HappyAbsSyn )
+newtype HappyWrap29 = HappyWrap29 (Grammatica.Abs.Positioned Grammatica.Abs.LExpr)
+happyIn29 :: (Grammatica.Abs.Positioned Grammatica.Abs.LExpr) -> (HappyAbsSyn )
 happyIn29 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap29 x)
 {-# INLINE happyIn29 #-}
 happyOut29 :: (HappyAbsSyn ) -> HappyWrap29
 happyOut29 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut29 #-}
-newtype HappyWrap30 = HappyWrap30 (Grammatica.Abs.LExpr)
-happyIn30 :: (Grammatica.Abs.LExpr) -> (HappyAbsSyn )
+newtype HappyWrap30 = HappyWrap30 (Grammatica.Abs.Positioned Grammatica.Abs.LExpr)
+happyIn30 :: (Grammatica.Abs.Positioned Grammatica.Abs.LExpr) -> (HappyAbsSyn )
 happyIn30 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap30 x)
 {-# INLINE happyIn30 #-}
 happyOut30 :: (HappyAbsSyn ) -> HappyWrap30
 happyOut30 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut30 #-}
-newtype HappyWrap31 = HappyWrap31 (Grammatica.Abs.LExpr)
-happyIn31 :: (Grammatica.Abs.LExpr) -> (HappyAbsSyn )
+newtype HappyWrap31 = HappyWrap31 (Grammatica.Abs.Positioned Grammatica.Abs.LExpr)
+happyIn31 :: (Grammatica.Abs.Positioned Grammatica.Abs.LExpr) -> (HappyAbsSyn )
 happyIn31 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap31 x)
 {-# INLINE happyIn31 #-}
 happyOut31 :: (HappyAbsSyn ) -> HappyWrap31
 happyOut31 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut31 #-}
-newtype HappyWrap32 = HappyWrap32 (Grammatica.Abs.BLExpr)
-happyIn32 :: (Grammatica.Abs.BLExpr) -> (HappyAbsSyn )
+newtype HappyWrap32 = HappyWrap32 (Grammatica.Abs.Positioned Grammatica.Abs.BLExpr)
+happyIn32 :: (Grammatica.Abs.Positioned Grammatica.Abs.BLExpr) -> (HappyAbsSyn )
 happyIn32 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap32 x)
 {-# INLINE happyIn32 #-}
 happyOut32 :: (HappyAbsSyn ) -> HappyWrap32
 happyOut32 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut32 #-}
-newtype HappyWrap33 = HappyWrap33 (Grammatica.Abs.Program)
-happyIn33 :: (Grammatica.Abs.Program) -> (HappyAbsSyn )
+newtype HappyWrap33 = HappyWrap33 (Grammatica.Abs.Positioned Grammatica.Abs.Program)
+happyIn33 :: (Grammatica.Abs.Positioned Grammatica.Abs.Program) -> (HappyAbsSyn )
 happyIn33 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap33 x)
 {-# INLINE happyIn33 #-}
 happyOut33 :: (HappyAbsSyn ) -> HappyWrap33
 happyOut33 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut33 #-}
-newtype HappyWrap34 = HappyWrap34 ([Grammatica.Abs.Decl])
-happyIn34 :: ([Grammatica.Abs.Decl]) -> (HappyAbsSyn )
+newtype HappyWrap34 = HappyWrap34 ([Grammatica.Abs.Positioned Grammatica.Abs.Decl])
+happyIn34 :: ([Grammatica.Abs.Positioned Grammatica.Abs.Decl]) -> (HappyAbsSyn )
 happyIn34 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap34 x)
 {-# INLINE happyIn34 #-}
 happyOut34 :: (HappyAbsSyn ) -> HappyWrap34
 happyOut34 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut34 #-}
-newtype HappyWrap35 = HappyWrap35 (Grammatica.Abs.Decl)
-happyIn35 :: (Grammatica.Abs.Decl) -> (HappyAbsSyn )
+newtype HappyWrap35 = HappyWrap35 (Grammatica.Abs.Positioned Grammatica.Abs.Decl)
+happyIn35 :: (Grammatica.Abs.Positioned Grammatica.Abs.Decl) -> (HappyAbsSyn )
 happyIn35 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap35 x)
 {-# INLINE happyIn35 #-}
 happyOut35 :: (HappyAbsSyn ) -> HappyWrap35
 happyOut35 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut35 #-}
-newtype HappyWrap36 = HappyWrap36 ([Grammatica.Abs.Parameter])
-happyIn36 :: ([Grammatica.Abs.Parameter]) -> (HappyAbsSyn )
+newtype HappyWrap36 = HappyWrap36 ([Grammatica.Abs.Positioned Grammatica.Abs.Parameter])
+happyIn36 :: ([Grammatica.Abs.Positioned Grammatica.Abs.Parameter]) -> (HappyAbsSyn )
 happyIn36 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap36 x)
 {-# INLINE happyIn36 #-}
 happyOut36 :: (HappyAbsSyn ) -> HappyWrap36
 happyOut36 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut36 #-}
-newtype HappyWrap37 = HappyWrap37 (Grammatica.Abs.Parameter)
-happyIn37 :: (Grammatica.Abs.Parameter) -> (HappyAbsSyn )
+newtype HappyWrap37 = HappyWrap37 (Grammatica.Abs.Positioned Grammatica.Abs.Parameter)
+happyIn37 :: (Grammatica.Abs.Positioned Grammatica.Abs.Parameter) -> (HappyAbsSyn )
 happyIn37 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap37 x)
 {-# INLINE happyIn37 #-}
 happyOut37 :: (HappyAbsSyn ) -> HappyWrap37
 happyOut37 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut37 #-}
-newtype HappyWrap38 = HappyWrap38 (Grammatica.Abs.VarSpec)
-happyIn38 :: (Grammatica.Abs.VarSpec) -> (HappyAbsSyn )
+newtype HappyWrap38 = HappyWrap38 (Grammatica.Abs.Positioned Grammatica.Abs.VarSpec)
+happyIn38 :: (Grammatica.Abs.Positioned Grammatica.Abs.VarSpec) -> (HappyAbsSyn )
 happyIn38 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap38 x)
 {-# INLINE happyIn38 #-}
 happyOut38 :: (HappyAbsSyn ) -> HappyWrap38
 happyOut38 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut38 #-}
-newtype HappyWrap39 = HappyWrap39 (Grammatica.Abs.TypeSpec)
-happyIn39 :: (Grammatica.Abs.TypeSpec) -> (HappyAbsSyn )
+newtype HappyWrap39 = HappyWrap39 (Grammatica.Abs.Positioned Grammatica.Abs.TypeSpec)
+happyIn39 :: (Grammatica.Abs.Positioned Grammatica.Abs.TypeSpec) -> (HappyAbsSyn )
 happyIn39 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap39 x)
 {-# INLINE happyIn39 #-}
 happyOut39 :: (HappyAbsSyn ) -> HappyWrap39
@@ -284,64 +278,64 @@ happyIn41 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap41 x)
 happyOut41 :: (HappyAbsSyn ) -> HappyWrap41
 happyOut41 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut41 #-}
-newtype HappyWrap42 = HappyWrap42 (Grammatica.Abs.CompStmt)
-happyIn42 :: (Grammatica.Abs.CompStmt) -> (HappyAbsSyn )
+newtype HappyWrap42 = HappyWrap42 (Grammatica.Abs.Positioned Grammatica.Abs.CompStmt)
+happyIn42 :: (Grammatica.Abs.Positioned Grammatica.Abs.CompStmt) -> (HappyAbsSyn )
 happyIn42 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap42 x)
 {-# INLINE happyIn42 #-}
 happyOut42 :: (HappyAbsSyn ) -> HappyWrap42
 happyOut42 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut42 #-}
-newtype HappyWrap43 = HappyWrap43 ([Grammatica.Abs.BlockItem])
-happyIn43 :: ([Grammatica.Abs.BlockItem]) -> (HappyAbsSyn )
+newtype HappyWrap43 = HappyWrap43 ([Grammatica.Abs.Positioned Grammatica.Abs.BlockItem])
+happyIn43 :: ([Grammatica.Abs.Positioned Grammatica.Abs.BlockItem]) -> (HappyAbsSyn )
 happyIn43 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap43 x)
 {-# INLINE happyIn43 #-}
 happyOut43 :: (HappyAbsSyn ) -> HappyWrap43
 happyOut43 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut43 #-}
-newtype HappyWrap44 = HappyWrap44 (Grammatica.Abs.BlockItem)
-happyIn44 :: (Grammatica.Abs.BlockItem) -> (HappyAbsSyn )
+newtype HappyWrap44 = HappyWrap44 (Grammatica.Abs.Positioned Grammatica.Abs.BlockItem)
+happyIn44 :: (Grammatica.Abs.Positioned Grammatica.Abs.BlockItem) -> (HappyAbsSyn )
 happyIn44 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap44 x)
 {-# INLINE happyIn44 #-}
 happyOut44 :: (HappyAbsSyn ) -> HappyWrap44
 happyOut44 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut44 #-}
-newtype HappyWrap45 = HappyWrap45 ([Grammatica.Abs.Stmt])
-happyIn45 :: ([Grammatica.Abs.Stmt]) -> (HappyAbsSyn )
+newtype HappyWrap45 = HappyWrap45 ([Grammatica.Abs.Positioned Grammatica.Abs.Stmt])
+happyIn45 :: ([Grammatica.Abs.Positioned Grammatica.Abs.Stmt]) -> (HappyAbsSyn )
 happyIn45 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap45 x)
 {-# INLINE happyIn45 #-}
 happyOut45 :: (HappyAbsSyn ) -> HappyWrap45
 happyOut45 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut45 #-}
-newtype HappyWrap46 = HappyWrap46 (Grammatica.Abs.Stmt)
-happyIn46 :: (Grammatica.Abs.Stmt) -> (HappyAbsSyn )
+newtype HappyWrap46 = HappyWrap46 (Grammatica.Abs.Positioned Grammatica.Abs.Stmt)
+happyIn46 :: (Grammatica.Abs.Positioned Grammatica.Abs.Stmt) -> (HappyAbsSyn )
 happyIn46 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap46 x)
 {-# INLINE happyIn46 #-}
 happyOut46 :: (HappyAbsSyn ) -> HappyWrap46
 happyOut46 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut46 #-}
-newtype HappyWrap47 = HappyWrap47 (Grammatica.Abs.Assignment_op)
-happyIn47 :: (Grammatica.Abs.Assignment_op) -> (HappyAbsSyn )
+newtype HappyWrap47 = HappyWrap47 (Grammatica.Abs.Positioned Grammatica.Abs.Assignment_op)
+happyIn47 :: (Grammatica.Abs.Positioned Grammatica.Abs.Assignment_op) -> (HappyAbsSyn )
 happyIn47 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap47 x)
 {-# INLINE happyIn47 #-}
 happyOut47 :: (HappyAbsSyn ) -> HappyWrap47
 happyOut47 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut47 #-}
-newtype HappyWrap48 = HappyWrap48 (Grammatica.Abs.JumpStmt)
-happyIn48 :: (Grammatica.Abs.JumpStmt) -> (HappyAbsSyn )
+newtype HappyWrap48 = HappyWrap48 (Grammatica.Abs.Positioned Grammatica.Abs.JumpStmt)
+happyIn48 :: (Grammatica.Abs.Positioned Grammatica.Abs.JumpStmt) -> (HappyAbsSyn )
 happyIn48 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap48 x)
 {-# INLINE happyIn48 #-}
 happyOut48 :: (HappyAbsSyn ) -> HappyWrap48
 happyOut48 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut48 #-}
-newtype HappyWrap49 = HappyWrap49 (Grammatica.Abs.SelectionStmt)
-happyIn49 :: (Grammatica.Abs.SelectionStmt) -> (HappyAbsSyn )
+newtype HappyWrap49 = HappyWrap49 (Grammatica.Abs.Positioned Grammatica.Abs.SelectionStmt)
+happyIn49 :: (Grammatica.Abs.Positioned Grammatica.Abs.SelectionStmt) -> (HappyAbsSyn )
 happyIn49 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap49 x)
 {-# INLINE happyIn49 #-}
 happyOut49 :: (HappyAbsSyn ) -> HappyWrap49
 happyOut49 x = Happy_GHC_Exts.unsafeCoerce# x
 {-# INLINE happyOut49 #-}
-newtype HappyWrap50 = HappyWrap50 (Grammatica.Abs.IterStmt)
-happyIn50 :: (Grammatica.Abs.IterStmt) -> (HappyAbsSyn )
+newtype HappyWrap50 = HappyWrap50 (Grammatica.Abs.Positioned Grammatica.Abs.IterStmt)
+happyIn50 :: (Grammatica.Abs.Positioned Grammatica.Abs.IterStmt) -> (HappyAbsSyn )
 happyIn50 x = Happy_GHC_Exts.unsafeCoerce# (HappyWrap50 x)
 {-# INLINE happyIn50 #-}
 happyOut50 :: (HappyAbsSyn ) -> HappyWrap50
@@ -568,10 +562,11 @@ happyReduction_12 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut13 happy_x_1 of { (HappyWrap13 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut14 happy_x_3 of { (HappyWrap14 happy_var_3) -> 
 	happyIn13
-		 (Grammatica.Abs.Or happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Or happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_13 = happySpecReduce_1  7# happyReduction_13
 happyReduction_13 happy_x_1
@@ -585,10 +580,11 @@ happyReduction_14 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut14 happy_x_1 of { (HappyWrap14 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut15 happy_x_3 of { (HappyWrap15 happy_var_3) -> 
 	happyIn14
-		 (Grammatica.Abs.And happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.And happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_15 = happySpecReduce_1  8# happyReduction_15
 happyReduction_15 happy_x_1
@@ -600,10 +596,11 @@ happyReduction_15 happy_x_1
 happyReduce_16 = happySpecReduce_2  8# happyReduction_16
 happyReduction_16 happy_x_2
 	happy_x_1
-	 =  case happyOut16 happy_x_2 of { (HappyWrap16 happy_var_2) -> 
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut16 happy_x_2 of { (HappyWrap16 happy_var_2) -> 
 	happyIn15
-		 (Grammatica.Abs.Not happy_var_2
-	)}
+		 (positioned happy_var_1 $ Grammatica.Abs.Not happy_var_2
+	)}}
 
 happyReduce_17 = happySpecReduce_1  9# happyReduction_17
 happyReduction_17 happy_x_1
@@ -617,60 +614,66 @@ happyReduction_18 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut17 happy_x_1 of { (HappyWrap17 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut17 happy_x_3 of { (HappyWrap17 happy_var_3) -> 
 	happyIn16
-		 (Grammatica.Abs.Eq happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Eq happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_19 = happySpecReduce_3  9# happyReduction_19
 happyReduction_19 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut17 happy_x_1 of { (HappyWrap17 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut17 happy_x_3 of { (HappyWrap17 happy_var_3) -> 
 	happyIn16
-		 (Grammatica.Abs.Neq happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Neq happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_20 = happySpecReduce_3  9# happyReduction_20
 happyReduction_20 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut17 happy_x_1 of { (HappyWrap17 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut17 happy_x_3 of { (HappyWrap17 happy_var_3) -> 
 	happyIn16
-		 (Grammatica.Abs.Lt happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Lt happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_21 = happySpecReduce_3  9# happyReduction_21
 happyReduction_21 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut17 happy_x_1 of { (HappyWrap17 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut17 happy_x_3 of { (HappyWrap17 happy_var_3) -> 
 	happyIn16
-		 (Grammatica.Abs.LtE happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.LtE happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_22 = happySpecReduce_3  9# happyReduction_22
 happyReduction_22 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut17 happy_x_1 of { (HappyWrap17 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut17 happy_x_3 of { (HappyWrap17 happy_var_3) -> 
 	happyIn16
-		 (Grammatica.Abs.Gt happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Gt happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_23 = happySpecReduce_3  9# happyReduction_23
 happyReduction_23 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut17 happy_x_1 of { (HappyWrap17 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut17 happy_x_3 of { (HappyWrap17 happy_var_3) -> 
 	happyIn16
-		 (Grammatica.Abs.GtE happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.GtE happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_24 = happySpecReduce_1  10# happyReduction_24
 happyReduction_24 happy_x_1
@@ -684,20 +687,22 @@ happyReduction_25 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut17 happy_x_1 of { (HappyWrap17 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut18 happy_x_3 of { (HappyWrap18 happy_var_3) -> 
 	happyIn17
-		 (Grammatica.Abs.Add happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Add happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_26 = happySpecReduce_3  10# happyReduction_26
 happyReduction_26 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut17 happy_x_1 of { (HappyWrap17 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut18 happy_x_3 of { (HappyWrap18 happy_var_3) -> 
 	happyIn17
-		 (Grammatica.Abs.Sub happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Sub happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_27 = happySpecReduce_1  11# happyReduction_27
 happyReduction_27 happy_x_1
@@ -711,30 +716,33 @@ happyReduction_28 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut18 happy_x_1 of { (HappyWrap18 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { (HappyWrap19 happy_var_3) -> 
 	happyIn18
-		 (Grammatica.Abs.Mul happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Mul happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_29 = happySpecReduce_3  11# happyReduction_29
 happyReduction_29 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut18 happy_x_1 of { (HappyWrap18 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { (HappyWrap19 happy_var_3) -> 
 	happyIn18
-		 (Grammatica.Abs.Div happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Div happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_30 = happySpecReduce_3  11# happyReduction_30
 happyReduction_30 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut18 happy_x_1 of { (HappyWrap18 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { (HappyWrap19 happy_var_3) -> 
 	happyIn18
-		 (Grammatica.Abs.Mod happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Mod happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_31 = happySpecReduce_1  12# happyReduction_31
 happyReduction_31 happy_x_1
@@ -748,10 +756,11 @@ happyReduction_32 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut20 happy_x_1 of { (HappyWrap20 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut19 happy_x_3 of { (HappyWrap19 happy_var_3) -> 
 	happyIn19
-		 (Grammatica.Abs.Pow happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Pow happy_var_1 happy_var_3
+	)}}}
 
 happyReduce_33 = happySpecReduce_1  13# happyReduction_33
 happyReduction_33 happy_x_1
@@ -763,18 +772,20 @@ happyReduction_33 happy_x_1
 happyReduce_34 = happySpecReduce_2  13# happyReduction_34
 happyReduction_34 happy_x_2
 	happy_x_1
-	 =  case happyOut21 happy_x_2 of { (HappyWrap21 happy_var_2) -> 
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut21 happy_x_2 of { (HappyWrap21 happy_var_2) -> 
 	happyIn20
-		 (Grammatica.Abs.Neg happy_var_2
-	)}
+		 (positioned happy_var_1 $ Grammatica.Abs.Neg happy_var_2
+	)}}
 
 happyReduce_35 = happySpecReduce_2  13# happyReduction_35
 happyReduction_35 happy_x_2
 	happy_x_1
-	 =  case happyOut28 happy_x_2 of { (HappyWrap28 happy_var_2) -> 
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut28 happy_x_2 of { (HappyWrap28 happy_var_2) -> 
 	happyIn20
-		 (Grammatica.Abs.Ref happy_var_2
-	)}
+		 (positioned happy_var_1 $ Grammatica.Abs.Ref happy_var_2
+	)}}
 
 happyReduce_36 = happySpecReduce_1  14# happyReduction_36
 happyReduction_36 happy_x_1
@@ -787,7 +798,7 @@ happyReduce_37 = happySpecReduce_1  14# happyReduction_37
 happyReduction_37 happy_x_1
 	 =  case happyOut26 happy_x_1 of { (HappyWrap26 happy_var_1) -> 
 	happyIn21
-		 (Grammatica.Abs.FCall happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.FCall happy_var_1)
 	)}
 
 happyReduce_38 = happySpecReduce_1  15# happyReduction_38
@@ -801,35 +812,35 @@ happyReduce_39 = happySpecReduce_1  15# happyReduction_39
 happyReduction_39 happy_x_1
 	 =  case happyOut10 happy_x_1 of { (HappyWrap10 happy_var_1) -> 
 	happyIn22
-		 (Grammatica.Abs.Int happy_var_1
+		 (positionedLiteral $ Grammatica.Abs.Int $ positionedLiteral happy_var_1
 	)}
 
 happyReduce_40 = happySpecReduce_1  15# happyReduction_40
 happyReduction_40 happy_x_1
 	 =  case happyOut8 happy_x_1 of { (HappyWrap8 happy_var_1) -> 
 	happyIn22
-		 (Grammatica.Abs.Char happy_var_1
+		 (positionedLiteral $ Grammatica.Abs.Char $ positionedLiteral happy_var_1
 	)}
 
 happyReduce_41 = happySpecReduce_1  15# happyReduction_41
 happyReduction_41 happy_x_1
 	 =  case happyOut11 happy_x_1 of { (HappyWrap11 happy_var_1) -> 
 	happyIn22
-		 (Grammatica.Abs.String happy_var_1
+		 (positionedLiteral $ Grammatica.Abs.String $ positionedLiteral happy_var_1
 	)}
 
 happyReduce_42 = happySpecReduce_1  15# happyReduction_42
 happyReduction_42 happy_x_1
 	 =  case happyOut9 happy_x_1 of { (HappyWrap9 happy_var_1) -> 
 	happyIn22
-		 (Grammatica.Abs.Float happy_var_1
+		 (positionedLiteral $ Grammatica.Abs.Float $ positionedLiteral happy_var_1
 	)}
 
 happyReduce_43 = happySpecReduce_1  15# happyReduction_43
 happyReduction_43 happy_x_1
 	 =  case happyOut12 happy_x_1 of { (HappyWrap12 happy_var_1) -> 
 	happyIn22
-		 (Grammatica.Abs.Bool happy_var_1
+		 (positionedLiteral $ Grammatica.Abs.Bool $ positionedLiteral happy_var_1
 	)}
 
 happyReduce_44 = happyReduce 7# 15# happyReduction_44
@@ -841,12 +852,16 @@ happyReduction_44 (happy_x_7 `HappyStk`
 	happy_x_2 `HappyStk`
 	happy_x_1 `HappyStk`
 	happyRest)
-	 = case happyOut10 happy_x_2 of { (HappyWrap10 happy_var_2) -> 
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut10 happy_x_2 of { (HappyWrap10 happy_var_2) -> 
 	case happyOut40 happy_x_4 of { (HappyWrap40 happy_var_4) -> 
 	case happyOut27 happy_x_6 of { (HappyWrap27 happy_var_6) -> 
 	happyIn22
-		 (Grammatica.Abs.GoArrayLit happy_var_2 happy_var_4 happy_var_6
-	) `HappyStk` happyRest}}}
+		 (positioned happy_var_1 $ Grammatica.Abs.GoArrayLit 
+        (positionedLiteral happy_var_2) 
+        (positionedLiteral happy_var_4) 
+        happy_var_6
+	) `HappyStk` happyRest}}}}
 
 happyReduce_45 = happySpecReduce_1  16# happyReduction_45
 happyReduction_45 happy_x_1
@@ -875,7 +890,7 @@ happyReduce_48 = happySpecReduce_1  18# happyReduction_48
 happyReduction_48 happy_x_1
 	 =  case happyOut28 happy_x_1 of { (HappyWrap28 happy_var_1) -> 
 	happyIn25
-		 (Grammatica.Abs.Lexpr happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.Lexpr happy_var_1)
 	)}
 
 happyReduce_49 = happyReduce 4# 19# happyReduction_49
@@ -885,10 +900,13 @@ happyReduction_49 (happy_x_4 `HappyStk`
 	happy_x_1 `HappyStk`
 	happyRest)
 	 = case happyOut7 happy_x_1 of { (HappyWrap7 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut27 happy_x_3 of { (HappyWrap27 happy_var_3) -> 
 	happyIn26
-		 (Grammatica.Abs.Call happy_var_1 happy_var_3
-	) `HappyStk` happyRest}}
+		 (positioned happy_var_2 $ Grammatica.Abs.Call 
+        (positionedLiteral happy_var_1) 
+        happy_var_3
+	) `HappyStk` happyRest}}}
 
 happyReduce_50 = happySpecReduce_0  20# happyReduction_50
 happyReduction_50  =  happyIn27
@@ -922,10 +940,11 @@ happyReduction_53 happy_x_1
 happyReduce_54 = happySpecReduce_2  21# happyReduction_54
 happyReduction_54 happy_x_2
 	happy_x_1
-	 =  case happyOut22 happy_x_2 of { (HappyWrap22 happy_var_2) -> 
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut22 happy_x_2 of { (HappyWrap22 happy_var_2) -> 
 	happyIn28
-		 (Grammatica.Abs.Deref happy_var_2
-	)}
+		 (positioned happy_var_1 $ Grammatica.Abs.Deref happy_var_2
+	)}}
 
 happyReduce_55 = happySpecReduce_1  22# happyReduction_55
 happyReduction_55 happy_x_1
@@ -937,18 +956,20 @@ happyReduction_55 happy_x_1
 happyReduce_56 = happySpecReduce_2  22# happyReduction_56
 happyReduction_56 happy_x_2
 	happy_x_1
-	 =  case happyOut30 happy_x_2 of { (HappyWrap30 happy_var_2) -> 
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut30 happy_x_2 of { (HappyWrap30 happy_var_2) -> 
 	happyIn29
-		 (Grammatica.Abs.PreInc happy_var_2
-	)}
+		 (positioned happy_var_1 $ Grammatica.Abs.PreInc happy_var_2
+	)}}
 
 happyReduce_57 = happySpecReduce_2  22# happyReduction_57
 happyReduction_57 happy_x_2
 	happy_x_1
-	 =  case happyOut30 happy_x_2 of { (HappyWrap30 happy_var_2) -> 
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut30 happy_x_2 of { (HappyWrap30 happy_var_2) -> 
 	happyIn29
-		 (Grammatica.Abs.PreDecr happy_var_2
-	)}
+		 (positioned happy_var_1 $ Grammatica.Abs.PreDecr happy_var_2
+	)}}
 
 happyReduce_58 = happySpecReduce_1  23# happyReduction_58
 happyReduction_58 happy_x_1
@@ -961,23 +982,25 @@ happyReduce_59 = happySpecReduce_2  23# happyReduction_59
 happyReduction_59 happy_x_2
 	happy_x_1
 	 =  case happyOut31 happy_x_1 of { (HappyWrap31 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	happyIn30
-		 (Grammatica.Abs.PostInc happy_var_1
-	)}
+		 (positioned happy_var_2 $ Grammatica.Abs.PostInc happy_var_1
+	)}}
 
 happyReduce_60 = happySpecReduce_2  23# happyReduction_60
 happyReduction_60 happy_x_2
 	happy_x_1
 	 =  case happyOut31 happy_x_1 of { (HappyWrap31 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	happyIn30
-		 (Grammatica.Abs.PostDecr happy_var_1
-	)}
+		 (positioned happy_var_2 $ Grammatica.Abs.PostDecr happy_var_1
+	)}}
 
 happyReduce_61 = happySpecReduce_1  23# happyReduction_61
 happyReduction_61 happy_x_1
 	 =  case happyOut32 happy_x_1 of { (HappyWrap32 happy_var_1) -> 
 	happyIn30
-		 (Grammatica.Abs.BasLExpr happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.BasLExpr happy_var_1)
 	)}
 
 happyReduce_62 = happySpecReduce_3  24# happyReduction_62
@@ -996,23 +1019,24 @@ happyReduction_63 (happy_x_4 `HappyStk`
 	happy_x_1 `HappyStk`
 	happyRest)
 	 = case happyOut7 happy_x_1 of { (HappyWrap7 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut13 happy_x_3 of { (HappyWrap13 happy_var_3) -> 
 	happyIn32
-		 (Grammatica.Abs.ArrayEl happy_var_1 happy_var_3
-	) `HappyStk` happyRest}}
+		 (positioned happy_var_2 $ Grammatica.Abs.ArrayEl (positionedLiteral happy_var_1) happy_var_3
+	) `HappyStk` happyRest}}}
 
 happyReduce_64 = happySpecReduce_1  25# happyReduction_64
 happyReduction_64 happy_x_1
 	 =  case happyOut7 happy_x_1 of { (HappyWrap7 happy_var_1) -> 
 	happyIn32
-		 (Grammatica.Abs.Id happy_var_1
+		 (positionedLiteral $ Grammatica.Abs.Id $ positionedLiteral happy_var_1
 	)}
 
 happyReduce_65 = happySpecReduce_1  26# happyReduction_65
 happyReduction_65 happy_x_1
 	 =  case happyOut34 happy_x_1 of { (HappyWrap34 happy_var_1) -> 
 	happyIn33
-		 (Grammatica.Abs.Prog happy_var_1
+		 (positionedFromList happy_var_1 (Grammatica.Abs.Prog happy_var_1)
 	)}
 
 happyReduce_66 = happySpecReduce_0  27# happyReduction_66
@@ -1037,21 +1061,26 @@ happyReduction_68 (happy_x_6 `HappyStk`
 	happy_x_2 `HappyStk`
 	happy_x_1 `HappyStk`
 	happyRest)
-	 = case happyOut7 happy_x_2 of { (HappyWrap7 happy_var_2) -> 
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut7 happy_x_2 of { (HappyWrap7 happy_var_2) -> 
 	case happyOut36 happy_x_4 of { (HappyWrap36 happy_var_4) -> 
 	case happyOut42 happy_x_6 of { (HappyWrap42 happy_var_6) -> 
 	happyIn35
-		 (Grammatica.Abs.Dfun happy_var_2 happy_var_4 happy_var_6
-	) `HappyStk` happyRest}}}
+		 (positioned happy_var_1 $ Grammatica.Abs.Dfun 
+        (positionedLiteral happy_var_2) 
+        happy_var_4 
+        happy_var_6
+	) `HappyStk` happyRest}}}}
 
 happyReduce_69 = happySpecReduce_3  28# happyReduction_69
 happyReduction_69 happy_x_3
 	happy_x_2
 	happy_x_1
-	 =  case happyOut38 happy_x_2 of { (HappyWrap38 happy_var_2) -> 
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut38 happy_x_2 of { (HappyWrap38 happy_var_2) -> 
 	happyIn35
-		 (Grammatica.Abs.DvarGo happy_var_2
-	)}
+		 (positioned happy_var_1 $ Grammatica.Abs.DvarGo happy_var_2
+	)}}
 
 happyReduce_70 = happySpecReduce_0  29# happyReduction_70
 happyReduction_70  =  happyIn36
@@ -1079,11 +1108,14 @@ happyReduce_73 = happySpecReduce_3  30# happyReduction_73
 happyReduction_73 happy_x_3
 	happy_x_2
 	happy_x_1
-	 =  case happyOut7 happy_x_2 of { (HappyWrap7 happy_var_2) -> 
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut7 happy_x_2 of { (HappyWrap7 happy_var_2) -> 
 	case happyOut39 happy_x_3 of { (HappyWrap39 happy_var_3) -> 
 	happyIn37
-		 (Grammatica.Abs.Param happy_var_2 happy_var_3
-	)}}
+		 (positioned happy_var_1 $ Grammatica.Abs.Param 
+        (positionedLiteral happy_var_2) 
+        happy_var_3
+	)}}}
 
 happyReduce_74 = happyReduce 4# 31# happyReduction_74
 happyReduction_74 (happy_x_4 `HappyStk`
@@ -1093,20 +1125,27 @@ happyReduction_74 (happy_x_4 `HappyStk`
 	happyRest)
 	 = case happyOut7 happy_x_1 of { (HappyWrap7 happy_var_1) -> 
 	case happyOut39 happy_x_2 of { (HappyWrap39 happy_var_2) -> 
+	case happyOutTok happy_x_3 of { happy_var_3 -> 
 	case happyOut13 happy_x_4 of { (HappyWrap13 happy_var_4) -> 
 	happyIn38
-		 (Grammatica.Abs.VarSpecSingleInit happy_var_1 happy_var_2 happy_var_4
-	) `HappyStk` happyRest}}}
+		 (positioned happy_var_3 $ Grammatica.Abs.VarSpecSingleInit 
+        (positionedLiteral happy_var_1) 
+        happy_var_2 
+        happy_var_4
+	) `HappyStk` happyRest}}}}
 
 happyReduce_75 = happySpecReduce_3  31# happyReduction_75
 happyReduction_75 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut7 happy_x_1 of { (HappyWrap7 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	case happyOut13 happy_x_3 of { (HappyWrap13 happy_var_3) -> 
 	happyIn38
-		 (Grammatica.Abs.VarSpecArrayInit happy_var_1 happy_var_3
-	)}}
+		 (positioned happy_var_2 $ Grammatica.Abs.VarSpecArrayInit 
+        (positionedLiteral happy_var_1) 
+        happy_var_3
+	)}}}
 
 happyReduce_76 = happySpecReduce_2  31# happyReduction_76
 happyReduction_76 happy_x_2
@@ -1114,21 +1153,23 @@ happyReduction_76 happy_x_2
 	 =  case happyOut7 happy_x_1 of { (HappyWrap7 happy_var_1) -> 
 	case happyOut39 happy_x_2 of { (HappyWrap39 happy_var_2) -> 
 	happyIn38
-		 (Grammatica.Abs.VarSpecSingleNoInit happy_var_1 happy_var_2
+		 (positionedLiteral $ Grammatica.Abs.VarSpecSingleNoInit 
+        (positionedLiteral happy_var_1) 
+        happy_var_2
 	)}}
 
 happyReduce_77 = happySpecReduce_1  32# happyReduction_77
 happyReduction_77 happy_x_1
 	 =  case happyOut40 happy_x_1 of { (HappyWrap40 happy_var_1) -> 
 	happyIn39
-		 (Grammatica.Abs.BasTyp happy_var_1
+		 (positionedLiteral $ Grammatica.Abs.BasTyp $ positionedLiteral happy_var_1
 	)}
 
 happyReduce_78 = happySpecReduce_1  32# happyReduction_78
 happyReduction_78 happy_x_1
 	 =  case happyOut41 happy_x_1 of { (HappyWrap41 happy_var_1) -> 
 	happyIn39
-		 (Grammatica.Abs.CompType happy_var_1
+		 (positionedLiteral $ Grammatica.Abs.CompType $ positionedLiteral happy_var_1
 	)}
 
 happyReduce_79 = happySpecReduce_1  33# happyReduction_79
@@ -1170,7 +1211,7 @@ happyReduction_84 (happy_x_4 `HappyStk`
 	 = case happyOut10 happy_x_2 of { (HappyWrap10 happy_var_2) -> 
 	case happyOut39 happy_x_4 of { (HappyWrap39 happy_var_4) -> 
 	happyIn41
-		 (Grammatica.Abs.ArrDef happy_var_2 happy_var_4
+		 (Grammatica.Abs.ArrDef (positionedLiteral happy_var_2) happy_var_4
 	) `HappyStk` happyRest}}
 
 happyReduce_85 = happySpecReduce_3  34# happyReduction_85
@@ -1194,10 +1235,11 @@ happyReduce_87 = happySpecReduce_3  35# happyReduction_87
 happyReduction_87 happy_x_3
 	happy_x_2
 	happy_x_1
-	 =  case happyOut43 happy_x_2 of { (HappyWrap43 happy_var_2) -> 
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut43 happy_x_2 of { (HappyWrap43 happy_var_2) -> 
 	happyIn42
-		 (Grammatica.Abs.BlockDecl happy_var_2
-	)}
+		 (positioned happy_var_1 $ Grammatica.Abs.BlockDecl happy_var_2
+	)}}
 
 happyReduce_88 = happySpecReduce_0  36# happyReduction_88
 happyReduction_88  =  happyIn43
@@ -1217,14 +1259,14 @@ happyReduce_90 = happySpecReduce_1  37# happyReduction_90
 happyReduction_90 happy_x_1
 	 =  case happyOut35 happy_x_1 of { (HappyWrap35 happy_var_1) -> 
 	happyIn44
-		 (Grammatica.Abs.DeclItem happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.DeclItem happy_var_1)
 	)}
 
 happyReduce_91 = happySpecReduce_1  37# happyReduction_91
 happyReduction_91 happy_x_1
 	 =  case happyOut46 happy_x_1 of { (HappyWrap46 happy_var_1) -> 
 	happyIn44
-		 (Grammatica.Abs.StmtItem happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.StmtItem happy_var_1)
 	)}
 
 happyReduce_92 = happySpecReduce_0  38# happyReduction_92
@@ -1245,7 +1287,7 @@ happyReduce_94 = happySpecReduce_1  39# happyReduction_94
 happyReduction_94 happy_x_1
 	 =  case happyOut42 happy_x_1 of { (HappyWrap42 happy_var_1) -> 
 	happyIn46
-		 (Grammatica.Abs.Comp happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.Comp happy_var_1)
 	)}
 
 happyReduce_95 = happySpecReduce_2  39# happyReduction_95
@@ -1253,7 +1295,7 @@ happyReduction_95 happy_x_2
 	happy_x_1
 	 =  case happyOut26 happy_x_1 of { (HappyWrap26 happy_var_1) -> 
 	happyIn46
-		 (Grammatica.Abs.ProcCall happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.ProcCall happy_var_1)
 	)}
 
 happyReduce_96 = happySpecReduce_2  39# happyReduction_96
@@ -1261,21 +1303,21 @@ happyReduction_96 happy_x_2
 	happy_x_1
 	 =  case happyOut48 happy_x_1 of { (HappyWrap48 happy_var_1) -> 
 	happyIn46
-		 (Grammatica.Abs.Jmp happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.Jmp happy_var_1)
 	)}
 
 happyReduce_97 = happySpecReduce_1  39# happyReduction_97
 happyReduction_97 happy_x_1
 	 =  case happyOut50 happy_x_1 of { (HappyWrap50 happy_var_1) -> 
 	happyIn46
-		 (Grammatica.Abs.Iter happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.Iter happy_var_1)
 	)}
 
 happyReduce_98 = happySpecReduce_1  39# happyReduction_98
 happyReduction_98 happy_x_1
 	 =  case happyOut49 happy_x_1 of { (HappyWrap49 happy_var_1) -> 
 	happyIn46
-		 (Grammatica.Abs.Sel happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.Sel happy_var_1)
 	)}
 
 happyReduce_99 = happyReduce 4# 39# happyReduction_99
@@ -1288,7 +1330,7 @@ happyReduction_99 (happy_x_4 `HappyStk`
 	case happyOut47 happy_x_2 of { (HappyWrap47 happy_var_2) -> 
 	case happyOut13 happy_x_3 of { (HappyWrap13 happy_var_3) -> 
 	happyIn46
-		 (Grammatica.Abs.Assgn happy_var_1 happy_var_2 happy_var_3
+		 (positionedFrom happy_var_2 (Grammatica.Abs.Assgn happy_var_1 happy_var_2 happy_var_3)
 	) `HappyStk` happyRest}}}
 
 happyReduce_100 = happySpecReduce_2  39# happyReduction_100
@@ -1296,95 +1338,108 @@ happyReduction_100 happy_x_2
 	happy_x_1
 	 =  case happyOut28 happy_x_1 of { (HappyWrap28 happy_var_1) -> 
 	happyIn46
-		 (Grammatica.Abs.LExprStmt happy_var_1
+		 (positionedFrom happy_var_1 (Grammatica.Abs.LExprStmt happy_var_1)
 	)}
 
 happyReduce_101 = happySpecReduce_3  39# happyReduction_101
 happyReduction_101 happy_x_3
 	happy_x_2
 	happy_x_1
-	 =  case happyOut38 happy_x_2 of { (HappyWrap38 happy_var_2) -> 
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut38 happy_x_2 of { (HappyWrap38 happy_var_2) -> 
 	happyIn46
-		 (Grammatica.Abs.DeclStmt happy_var_2
-	)}
+		 (positioned happy_var_1 $ Grammatica.Abs.DeclStmt happy_var_2
+	)}}
 
 happyReduce_102 = happySpecReduce_3  39# happyReduction_102
 happyReduction_102 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut7 happy_x_1 of { (HappyWrap7 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	happyIn46
-		 (Grammatica.Abs.StmtInc happy_var_1
-	)}
+		 (positioned happy_var_2 $ Grammatica.Abs.StmtInc (positionedLiteral happy_var_1)
+	)}}
 
 happyReduce_103 = happySpecReduce_3  39# happyReduction_103
 happyReduction_103 happy_x_3
 	happy_x_2
 	happy_x_1
 	 =  case happyOut7 happy_x_1 of { (HappyWrap7 happy_var_1) -> 
+	case happyOutTok happy_x_2 of { happy_var_2 -> 
 	happyIn46
-		 (Grammatica.Abs.StmtDec happy_var_1
-	)}
+		 (positioned happy_var_2 $ Grammatica.Abs.StmtDec (positionedLiteral happy_var_1)
+	)}}
 
 happyReduce_104 = happySpecReduce_1  40# happyReduction_104
 happyReduction_104 happy_x_1
-	 =  happyIn47
-		 (Grammatica.Abs.Assign
-	)
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn47
+		 (positioned happy_var_1 $ Grammatica.Abs.Assign
+	)}
 
 happyReduce_105 = happySpecReduce_1  40# happyReduction_105
 happyReduction_105 happy_x_1
-	 =  happyIn47
-		 (Grammatica.Abs.AssgnMul
-	)
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn47
+		 (positioned happy_var_1 $ Grammatica.Abs.AssgnMul
+	)}
 
 happyReduce_106 = happySpecReduce_1  40# happyReduction_106
 happyReduction_106 happy_x_1
-	 =  happyIn47
-		 (Grammatica.Abs.AssgnAdd
-	)
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn47
+		 (positioned happy_var_1 $ Grammatica.Abs.AssgnAdd
+	)}
 
 happyReduce_107 = happySpecReduce_1  40# happyReduction_107
 happyReduction_107 happy_x_1
-	 =  happyIn47
-		 (Grammatica.Abs.AssgnDiv
-	)
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn47
+		 (positioned happy_var_1 $ Grammatica.Abs.AssgnDiv
+	)}
 
 happyReduce_108 = happySpecReduce_1  40# happyReduction_108
 happyReduction_108 happy_x_1
-	 =  happyIn47
-		 (Grammatica.Abs.AssgnSub
-	)
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn47
+		 (positioned happy_var_1 $ Grammatica.Abs.AssgnSub
+	)}
 
 happyReduce_109 = happySpecReduce_1  40# happyReduction_109
 happyReduction_109 happy_x_1
-	 =  happyIn47
-		 (Grammatica.Abs.AssgnPow
-	)
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn47
+		 (positioned happy_var_1 $ Grammatica.Abs.AssgnPow
+	)}
 
 happyReduce_110 = happySpecReduce_1  40# happyReduction_110
 happyReduction_110 happy_x_1
-	 =  happyIn47
-		 (Grammatica.Abs.AssgnAnd
-	)
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn47
+		 (positioned happy_var_1 $ Grammatica.Abs.AssgnAnd
+	)}
 
 happyReduce_111 = happySpecReduce_1  40# happyReduction_111
 happyReduction_111 happy_x_1
-	 =  happyIn47
-		 (Grammatica.Abs.AssgnOr
-	)
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn47
+		 (positioned happy_var_1 $ Grammatica.Abs.AssgnOr
+	)}
 
 happyReduce_112 = happySpecReduce_1  41# happyReduction_112
 happyReduction_112 happy_x_1
-	 =  happyIn48
-		 (Grammatica.Abs.Break
-	)
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn48
+		 (positioned happy_var_1 $ Grammatica.Abs.Break
+	)}
 
 happyReduce_113 = happySpecReduce_1  41# happyReduction_113
 happyReduction_113 happy_x_1
-	 =  happyIn48
-		 (Grammatica.Abs.Continue
-	)
+	 =  case happyOutTok happy_x_1 of { happy_var_1 -> 
+	happyIn48
+		 (positioned happy_var_1 $ Grammatica.Abs.Continue
+	)}
 
 happyReduce_114 = happyReduce 5# 42# happyReduction_114
 happyReduction_114 (happy_x_5 `HappyStk`
@@ -1393,11 +1448,12 @@ happyReduction_114 (happy_x_5 `HappyStk`
 	happy_x_2 `HappyStk`
 	happy_x_1 `HappyStk`
 	happyRest)
-	 = case happyOut13 happy_x_3 of { (HappyWrap13 happy_var_3) -> 
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut13 happy_x_3 of { (HappyWrap13 happy_var_3) -> 
 	case happyOut46 happy_x_5 of { (HappyWrap46 happy_var_5) -> 
 	happyIn49
-		 (Grammatica.Abs.IfNoElse happy_var_3 happy_var_5
-	) `HappyStk` happyRest}}
+		 (positioned happy_var_1 $ Grammatica.Abs.IfNoElse happy_var_3 happy_var_5
+	) `HappyStk` happyRest}}}
 
 happyReduce_115 = happyReduce 7# 42# happyReduction_115
 happyReduction_115 (happy_x_7 `HappyStk`
@@ -1408,12 +1464,13 @@ happyReduction_115 (happy_x_7 `HappyStk`
 	happy_x_2 `HappyStk`
 	happy_x_1 `HappyStk`
 	happyRest)
-	 = case happyOut13 happy_x_3 of { (HappyWrap13 happy_var_3) -> 
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut13 happy_x_3 of { (HappyWrap13 happy_var_3) -> 
 	case happyOut46 happy_x_5 of { (HappyWrap46 happy_var_5) -> 
 	case happyOut46 happy_x_7 of { (HappyWrap46 happy_var_7) -> 
 	happyIn49
-		 (Grammatica.Abs.IfElse happy_var_3 happy_var_5 happy_var_7
-	) `HappyStk` happyRest}}}
+		 (positioned happy_var_1 $ Grammatica.Abs.IfElse happy_var_3 happy_var_5 happy_var_7
+	) `HappyStk` happyRest}}}}
 
 happyReduce_116 = happyReduce 5# 43# happyReduction_116
 happyReduction_116 (happy_x_5 `HappyStk`
@@ -1422,11 +1479,12 @@ happyReduction_116 (happy_x_5 `HappyStk`
 	happy_x_2 `HappyStk`
 	happy_x_1 `HappyStk`
 	happyRest)
-	 = case happyOut13 happy_x_3 of { (HappyWrap13 happy_var_3) -> 
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut13 happy_x_3 of { (HappyWrap13 happy_var_3) -> 
 	case happyOut46 happy_x_5 of { (HappyWrap46 happy_var_5) -> 
 	happyIn50
-		 (Grammatica.Abs.While happy_var_3 happy_var_5
-	) `HappyStk` happyRest}}
+		 (positioned happy_var_1 $ Grammatica.Abs.While happy_var_3 happy_var_5
+	) `HappyStk` happyRest}}}
 
 happyReduce_117 = happyReduce 7# 43# happyReduction_117
 happyReduction_117 (happy_x_7 `HappyStk`
@@ -1437,11 +1495,12 @@ happyReduction_117 (happy_x_7 `HappyStk`
 	happy_x_2 `HappyStk`
 	happy_x_1 `HappyStk`
 	happyRest)
-	 = case happyOut46 happy_x_2 of { (HappyWrap46 happy_var_2) -> 
+	 = case happyOutTok happy_x_1 of { happy_var_1 -> 
+	case happyOut46 happy_x_2 of { (HappyWrap46 happy_var_2) -> 
 	case happyOut13 happy_x_5 of { (HappyWrap13 happy_var_5) -> 
 	happyIn50
-		 (Grammatica.Abs.DoWhile happy_var_2 happy_var_5
-	) `HappyStk` happyRest}}
+		 (positioned happy_var_1 $ Grammatica.Abs.DoWhile happy_var_2 happy_var_5
+	) `HappyStk` happyRest}}}
 
 happyNewToken action sts stk [] =
 	happyDoAction 55# notHappyAtAll action sts stk []
@@ -1532,6 +1591,27 @@ pLExpr tks = happySomeParser where
 
 happySeq = happyDontSeq
 
+
+-- Helper function to create Positioned values
+mkPos :: Token -> Grammatica.Abs.SourcePos
+mkPos (PT (Pn _ l c) _) = Grammatica.Abs.SourcePos l c ""
+
+-- Per creare positioned da un Token
+positioned :: Token -> a -> Grammatica.Abs.Positioned a
+positioned tok x = Grammatica.Abs.Positioned (mkPos tok) x
+
+-- Per creare positioned da un valore letterale (usando posizione dummy)
+positionedLiteral :: a -> Grammatica.Abs.Positioned a
+positionedLiteral x = Grammatica.Abs.Positioned (Grammatica.Abs.SourcePos 0 0 "") x
+
+-- Per creare positioned copiando la posizione da un altro Positioned
+positionedFrom :: Grammatica.Abs.Positioned b -> c -> Grammatica.Abs.Positioned c
+positionedFrom (Grammatica.Abs.Positioned pos _) x = Grammatica.Abs.Positioned pos x
+
+-- Per creare positioned da una lista non vuota
+positionedFromList :: [Grammatica.Abs.Positioned a] -> b -> Grammatica.Abs.Positioned b
+positionedFromList [] x = Grammatica.Abs.Positioned (Grammatica.Abs.SourcePos 0 0 "") x
+positionedFromList ((Grammatica.Abs.Positioned pos _):_) x = Grammatica.Abs.Positioned pos x
 
 type Err = Either String
 
