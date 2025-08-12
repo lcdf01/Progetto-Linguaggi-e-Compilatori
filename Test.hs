@@ -14,6 +14,9 @@ import TypeEnv (prettyPrintError, TypeError) -- Importa anche il tipo TypeError
 import Control.Monad (when)
 import System.Exit (exitFailure)
 
+import Grammatica.TacGen  (genProgram)
+import Grammatica.TacPP   (ppProgram)
+
 main :: IO ()
 main = do
     args <- getArgs
@@ -39,3 +42,8 @@ main = do
                     exitFailure
                 Right _ -> do
                     putStrLn "Type checking completato con successo."
+                    putStrLn "Generazione TAC..."
+                    let tacProg = genProgram ast   -- usa l'AST già tipato o l'AST originale
+                    putStrLn (ppProgram tacProg)
+                    putStrLn "TAC generato con successo."
+
