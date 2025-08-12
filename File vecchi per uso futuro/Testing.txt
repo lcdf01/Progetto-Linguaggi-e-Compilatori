@@ -12,13 +12,13 @@ func main() {
   //var z, w int = 1, 2;
   var b = [3]int{1, 2, 3};
 
-  var g float = 223.14;
-  var f float = x / g;
+  var g float = 3.14;
+
   var pointer *int;
   
-  var p *float = &g;
-	*p = *p / 2*3.56;
-  
+  var p *int = &g;
+	*p = *p / 2;
+
   x++;
   cristo(x);
 

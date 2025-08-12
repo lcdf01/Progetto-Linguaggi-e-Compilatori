@@ -1,0 +1,55 @@
+# File: Makefile
+# Progetto Linguaggi e Compilatori - Build automatico con Alex/Happy + GHC
+
+# Toolchain
+GHC        = ghc
+GHCFLAGS   = -Wall -O2 -package array -i. -iGrammatica
+HAPPY      = happy
+HAPPY_OPTS = -gca          # --ghc + codegen array + info
+ALEX       = alex
+ALEX_OPTS  = --ghc
+
+# Exec e main
+EXEC = TypeCheck
+MAIN = Main.hs
+
+# Cartella grammatica e sorgenti
+GRAMDIR   = Grammatica
+GRAMFILES = $(GRAMDIR)/Abs.hs \
+            $(GRAMDIR)/Lex.hs \
+            $(GRAMDIR)/Par.hs \
+            $(GRAMDIR)/Print.hs \
+            $(GRAMDIR)/Skel.hs
+
+SOURCES = $(MAIN) TypeChecker.hs TypeEnv.hs TypeRules.hs $(GRAMFILES)
+
+# Target di default
+all: $(EXEC)
+
+# Link finale (ordina esplicitamente i moduli della grammatica)
+$(EXEC): $(SOURCES)
+	$(GHC) $(GHCFLAGS) -o $@ \
+	  $(MAIN) TypeChecker.hs TypeEnv.hs TypeRules.hs \
+	  $(GRAMDIR)/Par.hs $(GRAMDIR)/Lex.hs $(GRAMDIR)/Abs.hs $(GRAMDIR)/Print.hs
+
+# Rigenerazione automatica dei .hs da .x/.y quando cambiano
+$(GRAMDIR)/Lex.hs: $(GRAMDIR)/Lex.x
+	$(ALEX) $(ALEX_OPTS) $<
+
+$(GRAMDIR)/Par.hs: $(GRAMDIR)/Par.y
+	$(HAPPY) $(HAPPY_OPTS) $<
+
+# Demo rapida
+demo: all
+	./$(EXEC) Testing.txt
+
+# Pulizia oggetti
+clean:
+	rm -f *.o *.hi $(EXEC)
+	rm -f $(GRAMDIR)/*.o $(GRAMDIR)/*.hi
+
+# Pulizia profonda (rimuove anche i .hs generati da Alex/Happy)
+distclean: clean
+	-rm -f $(GRAMDIR)/Lex.hs $(GRAMDIR)/Par.hs
+
+.PHONY: all demo clean distclean

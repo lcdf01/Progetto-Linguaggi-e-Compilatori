@@ -1,15 +1,15 @@
 -- File: Main.hs
 -- Main program per il progetto di Linguaggi e Compilatori
--- CORRETTO: Gestisce correttamente la lista di errori di tipo.
 
 module Main where
 
 import System.Environment (getArgs)
 import System.IO (readFile)
 import Grammatica.Par (pProgram, myLexer)
+--import Grammatica.Lex (myLexer)
 import Grammatica.Abs (Program)
 import TypeChecker (typeCheckProgram)
-import TypeEnv (prettyPrintError, TypeError) -- Importa anche il tipo TypeError
+import TypeEnv (prettyPrintError)
 
 import Control.Monad (when)
 import System.Exit (exitFailure)
@@ -29,13 +29,9 @@ main = do
         Right ast -> do
             putStrLn "Parsing OK. Avvio type checking..."
             case typeCheckProgram ast of
-                -- 'typeErrs' è una LISTA di errori
-                Left typeErrs -> do
-                    putStrLn "\n--- ERRORE/I DI TIPO RILEVATO/I ---\n"
-                    -- --- MODIFICA CHIAVE ---
-                    -- Itera sulla lista e stampa ogni errore formattato.
-                    mapM_ (putStrLn . ("  - " ++) . prettyPrintError) typeErrs
-                    putStrLn "\n------------------------------------"
+                Left typeErr -> do
+                    putStrLn "Type checking fallito:"
+                    putStrLn $ prettyPrintError typeErr
                     exitFailure
                 Right _ -> do
                     putStrLn "Type checking completato con successo."

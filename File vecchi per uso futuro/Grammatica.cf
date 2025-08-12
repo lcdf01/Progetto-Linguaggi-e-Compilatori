@@ -1,0 +1,159 @@
+-- BNFC sources for a simple Imperative Language
+
+
+comment "//" ;
+comment "/*" "*/" ;
+
+entrypoints Program, Stmt, RExpr, LExpr ;
+
+rules Boolean ::= "true" | "false" ;
+
+-- Precedenze degli operatori
+coercions   RExpr 12 ;
+
+-- Operatori logici
+Or.         RExpr ::= RExpr "||" RExpr1 ;
+And.        RExpr1 ::= RExpr1 "&&" RExpr2 ;
+Not.        RExpr2 ::= "!" RExpr3 ;
+
+-- Operatori di confronto (tutti allo stesso livello)
+Eq.         RExpr3 ::= RExpr4 "==" RExpr4 ;
+Neq.        RExpr3 ::= RExpr4 "!=" RExpr4 ;
+Lt.         RExpr3 ::= RExpr4 "<"  RExpr4 ;
+LtE.        RExpr3 ::= RExpr4 "<=" RExpr4 ;
+Gt.         RExpr3 ::= RExpr4 ">"  RExpr4 ;
+GtE.        RExpr3 ::= RExpr4 ">=" RExpr4 ;
+
+-- Operatori aritmetici additivi
+Add.        RExpr4 ::= RExpr4 "+" RExpr5 ;
+Sub.        RExpr4 ::= RExpr4 "-" RExpr5 ;
+
+-- Operatori aritmetici moltiplicativi
+Mul.        RExpr5 ::= RExpr5 "*" RExpr6 ;
+Div.        RExpr5 ::= RExpr5 "/" RExpr6 ;
+Mod.        RExpr5 ::= RExpr5 "%" RExpr6 ;
+
+-- Esponenziazione (associativa a destra)
+Pow.        RExpr6 ::= RExpr7 "^" RExpr6 ;
+
+-- Operatori unari
+Neg.        RExpr7 ::= "-" RExpr8 ;
+Ref.        RExpr7 ::= "&" LExpr ;
+
+-- Chiamate di funzione
+FCall.      RExpr8 ::= FunCall ;
+
+-- Letterali
+Int.        RExpr9 ::= Integer ;
+Char.       RExpr9 ::= Char ;
+String.     RExpr9 ::= String ;
+Float.      RExpr9 ::= Double ;
+Bool.       RExpr9 ::= Boolean ;
+
+-- Array literals
+GoArrayLit. RExpr9 ::= "[" Integer "]" BasicType "{" [RExpr] "}" ;
+
+-- L-expressions come R-expressions (livello più alto)
+Lexpr.      RExpr12 ::= LExpr ;
+
+-- Chiamate di funzione
+Call.       FunCall ::= Ident "(" [RExpr] ")" ;
+separator   RExpr "," ;
+
+-- L-expressions con struttura semplificata
+coercions   LExpr 3 ;
+
+-- Dereferenziamento
+Deref.      LExpr ::= "*" RExpr9 ;
+
+-- Pre-incremento/decremento
+PreInc.     LExpr1 ::= "++" LExpr2 ;
+PreDecr.    LExpr1 ::= "--" LExpr2 ;
+
+-- Post-incremento/decremento e base
+PostInc.    LExpr2 ::= LExpr3 "++" ;
+PostDecr.   LExpr2 ::= LExpr3 "--" ;
+BasLExpr.   LExpr2 ::= BLExpr ;
+
+-- Array indexing e identificatori
+ArrayEl.    BLExpr ::= Ident "[" RExpr "]" ;
+Id.         BLExpr ::= Ident ;
+
+-- Programma
+Prog.       Program ::= [Decl] ;
+separator   Decl "" ;
+
+-- Dichiarazioni
+Dfun.       Decl ::= "func" Ident "(" [Parameter] ")" CompStmt ;
+DvarGo.     Decl ::= "var" VarSpec ";" ;
+
+-- Parametri
+separator   Parameter "," ;
+Param.      Parameter ::= "var" Ident TypeSpec ;
+
+-- VarSpec
+-- VarSpecMultiInit.   VarSpec ::= MyIdentList TypeSpec "=" MyRExprList ;     -- var x, y int = 1, 2
+-- VarSpecMultiNoInit. VarSpec ::= MyIdentList TypeSpec ;                   -- var x, y int
+VarSpecSingleInit.  VarSpec ::= Ident TypeSpec "=" RExpr ;             -- var x int = 1  
+VarSpecArrayInit.   VarSpec ::= Ident "=" RExpr ;                      -- var x = [3]int{1,2,3}
+VarSpecSingleNoInit. VarSpec ::= Ident TypeSpec ;                      -- var x int
+
+-- Liste separate per evitare conflitti con [Ident]
+-- MyIdentList. MyIdentList ::= Ident "," Ident ;
+-- MyIdentListExt. MyIdentList ::= MyIdentList "," Ident ;
+
+-- MyRExprList. MyRExprList ::= RExpr "," RExpr ;
+-- MyRExprListExt. MyRExprList ::= MyRExprList "," RExpr ;
+
+-- Sistema di tipi
+BasTyp.     TypeSpec ::= BasicType ;
+rules BasicType ::= "bool" | "char" | "float" | "int" | "string" ;
+
+CompType.   TypeSpec ::= CompoundType ;
+ArrDef.     CompoundType ::= "[" Integer "]" TypeSpec ;
+ArrUnDef.   CompoundType ::= "[" "]" TypeSpec ;
+Pointer.    CompoundType ::= "*" TypeSpec ;
+
+-- Compound statements semplificati (una sola regola)
+BlockDecl.  CompStmt ::= "{" [BlockItem] "}" ;
+
+-- Block items
+separator BlockItem "" ;
+DeclItem.   BlockItem ::= Decl ;
+StmtItem.   BlockItem ::= Stmt ;
+
+-- Statements
+separator Stmt "" ;
+
+Comp.       Stmt ::= CompStmt ;
+ProcCall.   Stmt ::= FunCall ";" ;
+Jmp.        Stmt ::= JumpStmt ";" ;
+Iter.       Stmt ::= IterStmt ;
+Sel.        Stmt ::= SelectionStmt ;
+Assgn.      Stmt ::= LExpr Assignment_op RExpr ";" ;
+LExprStmt.  Stmt ::= LExpr ";" ;
+DeclStmt.   Stmt ::= "var" VarSpec ";" ;
+StmtInc.    Stmt ::= Ident "++" ";" ;
+StmtDec.    Stmt ::= Ident "--" ";" ;
+
+-- Operatori di assegnamento
+Assign.     Assignment_op ::= "=" ;
+AssgnMul.   Assignment_op ::= "*=" ;
+AssgnAdd.   Assignment_op ::= "+=" ;
+AssgnDiv.   Assignment_op ::= "/=" ;
+AssgnSub.   Assignment_op ::= "-=" ;
+AssgnPow.   Assignment_op ::= "^=" ;
+AssgnAnd.   Assignment_op ::= "&=" ;
+AssgnOr.    Assignment_op ::= "|=" ;
+
+-- Jump statements
+Break.      JumpStmt ::= "break" ;
+Continue.   JumpStmt ::= "continue" ;
+
+-- Selection statements
+IfNoElse.   SelectionStmt ::= "if" "(" RExpr ")" Stmt ;
+IfElse.     SelectionStmt ::= "if" "(" RExpr ")" Stmt "else" Stmt ;
+
+-- Iteration statements
+While.      IterStmt ::= "while" "(" RExpr ")" Stmt ;
+DoWhile.    IterStmt ::= "do" Stmt "while" "(" RExpr ")" ";" ;
