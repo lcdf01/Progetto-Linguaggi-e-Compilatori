@@ -1,14 +1,14 @@
 -- File: TypeEnv.hs
 -- Ambiente di tipi e strutture dati di base.
--- CORRETTO: Aggiunta la definizione della monade TypeCheck e le relative importazioni.
+-- CORRETTO: Aggiunti gli esportatori per i campi dei record 'varEnv' e 'varPos'.
 
 --- MODIFICA: Aggiunta lista di esportazione esplicita per includere TypeCheck.
 module TypeEnv (
     -- Tipi principali
     Type(..),
-    VarInfo(..),
+    VarInfo(..), -- Esportiamo il tipo e...
     FunInfo(..),
-    TypeEnv(..),
+    TypeEnv(..), -- Esportiamo il tipo e...
     TypeError(..),
 
     -- Monade del Type Checker
@@ -42,6 +42,8 @@ import Grammatica.Abs -- Importiamo i tipi dell'AST, inclusi Positioned e Source
 --- MODIFICA: Aggiunta delle importazioni per State e ExceptT.
 import Control.Monad.State
 import Control.Monad.Except
+import Data.IntMap.Strict (size)
+import Data.List (intercalate) -- Aggiunto per 'intercalateTypes'
 
 
 -- | Rappresentazione dei tipi nel nostro sistema

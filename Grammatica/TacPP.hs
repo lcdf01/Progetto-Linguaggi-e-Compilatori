@@ -1,7 +1,12 @@
+-- File: Grammatica/TacPP.hs
+-- Modificato per stampare gli identificatori nel formato nome_linea.
+
 {-# LANGUAGE LambdaCase #-}
 
 module Grammatica.TacPP (ppProgram, tagIdent) where
+
 import Grammatica.Tac
+import qualified Grammatica.Abs as A -- Importa i tipi dell'AST
 import qualified Data.List as L
 
 ppProgram :: Program -> String
@@ -31,16 +36,19 @@ pp = \case
     Add->"+"; Sub->"-"; Mul->"*"; Div->"/"; Mod->"%"
     Lt->"<"; Le->"<="; Gt->">"; Ge->">="; Eq->"=="; Neq->"!="
     And->"&&"; Or->"||"
-  pou = \case Neg->"-"; Not->"!"; FtoI->"(f2i)"; ItoF->"(i2f)"
+  pou = \case Neg->"-"; Not->"!"; FtoI->"(i2i)"; ItoF->"(f2f)"
   po = \case
     T t        -> t
-    Var v      -> v
+    -- *** MODIFICA CHIAVE ***
+    -- Quando stampiamo una variabile, usiamo la funzione 'tagIdent'
+    -- per aggiungere la posizione di dichiarazione, come da specifica.
+    Var v pos  -> tagIdent (v, (A.line pos, A.column pos))
     CInt i     -> show i
     CFloat d   -> show d
     CBool b    -> if b then "true" else "false"
     CChar c    -> show c
     CString s  -> show s
 
--- Aggiunge posizioni di dichiarazione, tipo "x@L3:C5"
+-- Modificato per corrispondere all'esempio della specifica (es. "x_12")
 tagIdent :: (String, (Int,Int)) -> String
-tagIdent (name,(l,c)) = name ++ "@L" ++ show l ++ ":C" ++ show c
+tagIdent (name,(l,_)) = name ++ "_" ++ show l
